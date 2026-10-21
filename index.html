@@ -161,7 +161,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas <span id="badgeModePublik" class="badge bg-warning text-dark ms-1" style="font-size: 9px; display: none;">MODE PUBLIK</span></div>
-                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;"></small>
+                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;">Kelas XII IPA 1</small>
                 </div>
             </span>
         </div>
@@ -181,7 +181,7 @@
 
         <!-- HALAMAN BERANDA -->
         <div id="page-beranda" class="page-section active">
-            <!-- Header Info Kelas & Pengurus -->
+            <!-- Header Info Kelas & Pengurus (Diberikan Default Text) -->
             <div class="card card-custom p-3 text-center mb-3">
                 <h6 id="displayClassName" class="fw-bold mb-1 text-info">Kelas XII IPA 1</h6>
                 <p id="displaySchoolAddress" class="text-white-50 small mb-2" style="font-size: 12px;"><i class="fa-solid fa-location-dot me-1"></i>SMA Negeri 1 Nusantara</p>
@@ -274,7 +274,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v3.1 Gen Z</span>
+                <span class="badge bg-danger mt-1">v3.2 Gen Z</span>
             </div>
 
             <!-- SHARE LINK PUBLIK VIA WA -->
@@ -388,7 +388,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.1">Versi 3.1 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.2">Versi 3.2 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -547,16 +547,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // INIALISASI LOKAL DENGAN PROTEKSI VALIDAISI CADANGAN
-        if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
-        if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
-        if (!localStorage.getItem('kas_schoolAddress')) localStorage.setItem('kas_schoolAddress', 'SMA Negeri 1 Nusantara');
-        if (!localStorage.getItem('kas_categories')) {
-            localStorage.setItem('kas_categories', JSON.stringify(['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya']));
+        // INISIALISASI PENYIMPANAN LOKAL DENGAN VALIDAISI LANGSUNG
+        function initLocalStorage() {
+            if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
+            if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
+            if (!localStorage.getItem('kas_schoolAddress')) localStorage.setItem('kas_schoolAddress', 'SMA Negeri 1 Nusantara');
+            if (!localStorage.getItem('kas_categories')) {
+                localStorage.setItem('kas_categories', JSON.stringify(['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya']));
+            }
+            if (!localStorage.getItem('kas_pengurus')) {
+                localStorage.setItem('kas_pengurus', JSON.stringify({ ketua: 'Ahmad Fauzi', bendahara: 'Siti Aminah' }));
+            }
         }
-        if (!localStorage.getItem('kas_pengurus')) {
-            localStorage.setItem('kas_pengurus', JSON.stringify({ ketua: 'Ahmad Fauzi', bendahara: 'Siti Aminah' }));
-        }
+        initLocalStorage();
 
         const savedTheme = localStorage.getItem('kas_theme') || 'pink';
         if (savedTheme !== 'pink') document.body.className = 'theme-' + savedTheme;
@@ -569,7 +572,6 @@
         let modalPinAuth, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
         let isAdminMode = false;
 
-        // BACA DATA DATA KAS AMAN
         let kasData = { transactions: [], students: [] };
         try {
             kasData.transactions = JSON.parse(localStorage.getItem('kas_transactions')) || [];
@@ -578,15 +580,11 @@
             kasData.students = JSON.parse(localStorage.getItem('kas_students')) || [];
         } catch (e) { kasData.students = []; }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            modalPinAuth = new bootstrap.Modal(document.getElementById('modalPinAuth'), { backdrop: 'static', keyboard: false });
-            modalChangePin = new bootstrap.Modal(document.getElementById('modalChangePin'));
-            modalNotif = new bootstrap.Modal(document.getElementById('modalNotif'));
-            modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirm'));
-            modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
-            modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
-
-            document.getElementById('selectTheme').value = savedTheme;
+        // FUNGSI UTAMA RENDER LANGSUNG DILAKUKAN TANPA MENUNGGU PARENT EVENT
+        function initAppUI() {
+            loadSchoolInfoToUI();
+            loadPengurusToUI();
+            loadCategoriesToUI();
 
             const urlParams = new URLSearchParams(window.location.search);
             const isPub = urlParams.get('mode') === 'publik' || localStorage.getItem('kas_isPublic') === 'true';
@@ -597,13 +595,25 @@
                 const isLogged = localStorage.getItem('kas_isLoggedIn');
                 if (isLogged === 'true') {
                     enterAdminMode();
-                } else {
+                } else if (modalPinAuth) {
                     modalPinAuth.show();
                 }
             }
 
             renderBeranda();
             populateSiswaDatalist();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            modalPinAuth = new bootstrap.Modal(document.getElementById('modalPinAuth'), { backdrop: 'static', keyboard: false });
+            modalChangePin = new bootstrap.Modal(document.getElementById('modalChangePin'));
+            modalNotif = new bootstrap.Modal(document.getElementById('modalNotif'));
+            modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirm'));
+            modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
+            modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
+
+            document.getElementById('selectTheme').value = savedTheme;
+            initAppUI();
         });
 
         function enterAdminMode() {
@@ -618,7 +628,7 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.1 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.2 (Admin)";
         }
 
         function enterPublicMode() {
@@ -632,7 +642,7 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.1 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.2 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
@@ -1175,7 +1185,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.1.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.2.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1246,10 +1256,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.2
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=3.1').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=3.2').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
