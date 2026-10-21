@@ -160,7 +160,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500;">v4.5 • Powered By Ari GPM</small>
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500;">v4.6 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -271,7 +271,7 @@
         <div id="page-pengaturan" class="page-section">
             <div class="text-center mb-3 mt-1">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v4.5 Gen Z</span>
+                <span class="badge bg-danger mt-1">v4.6 Gen Z</span>
             </div>
 
             <!-- TOMBOL LOGOUT / KELUAR ADMIN (Hanya Admin) -->
@@ -414,7 +414,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold">Versi 4.5</p>
+                <p class="text-white-50 small mb-1 fw-bold">Versi 4.6</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -454,12 +454,12 @@
     </div>
 
     <!-- MODAL: LUPA PIN LOKAL (PEMULIHAN MANDIRI) -->
-    <div class="modal fade" id="modalLupaPin" tabindex="-1">
+    <div class="modal fade" id="modalLupaPin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-3">
                 <div class="modal-header border-0 pb-0">
                     <h6 class="modal-title fw-bold"><i class="fa-solid fa-user-shield text-info me-2"></i>Pemulihan PIN Mandiri</h6>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" onclick="closeLupaPinModal()"></button>
                 </div>
                 <div class="modal-body">
                     <p class="text-white-50 small mb-2" id="labelSecQuestion">Jawab pertanyaan keamanan di bawah ini untuk mereset PIN Anda.</p>
@@ -471,7 +471,8 @@
                         <label class="form-label small">PIN Baru</label>
                         <input type="password" class="form-control" id="inputResetNewPin" placeholder="Masukkan PIN baru...">
                     </div>
-                    <button class="btn btn-info w-100 fw-bold" onclick="resetPinLocal()"><i class="fa-solid fa-check-circle me-2"></i>Reset PIN Sekarang</button>
+                    <button class="btn btn-info w-100 fw-bold mb-2" onclick="resetPinLocal()"><i class="fa-solid fa-check-circle me-2"></i>Reset PIN Sekarang</button>
+                    <button class="btn btn-outline-light btn-sm w-100" onclick="closeLupaPinModal()">Kembali ke Login PIN</button>
                 </div>
             </div>
         </div>
@@ -678,7 +679,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             modalPinAuth = new bootstrap.Modal(document.getElementById('modalPinAuth'), { backdrop: 'static', keyboard: false });
-            modalLupaPin = new bootstrap.Modal(document.getElementById('modalLupaPin'));
+            modalLupaPin = new bootstrap.Modal(document.getElementById('modalLupaPin'), { backdrop: 'static', keyboard: false });
             modalChangePin = new bootstrap.Modal(document.getElementById('modalChangePin'));
             modalNotif = new bootstrap.Modal(document.getElementById('modalNotif'));
             modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirm'));
@@ -766,6 +767,12 @@
             document.getElementById('inputResetAnswer').value = '';
             document.getElementById('inputResetNewPin').value = '';
             modalLupaPin.show();
+        }
+
+        // FUNGSI KEMBALI KETIKA TOMBOL X ATAU KEMBALI DIKLIK PADA MODAL LUPA PIN
+        function closeLupaPinModal() {
+            modalLupaPin.hide();
+            if(modalPinAuth) modalPinAuth.show();
         }
 
         function resetPinLocal() {
@@ -1356,7 +1363,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.5.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.6.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1427,10 +1434,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.5
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.6
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=4.5').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=4.6').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
