@@ -1,8 +1,10 @@
-const CACHE_NAME = 'kas-kelas-pwa-v1';
+// Nama cache diperbarui ke v1.1
+const CACHE_NAME = 'kas-kelas-pwa-v1.1';
 const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
+  './Logokaskelas.jpg', // Logo dimasukkan ke cache agar bisa diakses offline
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
