@@ -160,7 +160,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v4.3 • Powered By Ari GPM</small>
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500;">v4.5 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -271,14 +271,14 @@
         <div id="page-pengaturan" class="page-section">
             <div class="text-center mb-3 mt-1">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v4.3 Gen Z</span>
+                <span class="badge bg-danger mt-1">v4.5 Gen Z</span>
             </div>
 
             <!-- TOMBOL LOGOUT / KELUAR ADMIN (Hanya Admin) -->
             <div class="card card-custom mb-3 border-danger" id="adminSectionLogout">
                 <div class="card-body py-3 px-3 text-center">
                     <h6 class="card-title text-danger mb-2"><i class="fa-solid fa-right-from-bracket me-2"></i>Sesi Admin Aktif</h6>
-                    <p class="text-white-50 small mb-3">Keluar dari mode admin dan kembali ke mode publik read-only.</p>
+                    <p class="text-white-50 small mb-3">Keluar dari mode admin dan kembali ke halaman login.</p>
                     <button class="btn btn-danger btn-sm w-100 fw-bold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-2"></i>Log Out (Keluar Admin)</button>
                 </div>
             </div>
@@ -414,7 +414,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 4.3">Versi 4.3 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold">Versi 4.5</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -448,7 +448,6 @@
                         <a href="javascript:void(0)" class="text-info small text-decoration-none" onclick="openModalLupaPin()"><i class="fa-solid fa-key me-1"></i>Lupa PIN?</a>
                     </div>
                     <button class="btn btn-info w-100 fw-bold py-2 mb-2" onclick="verifyPinLogin()">Masuk Admin</button>
-                    <button class="btn btn-outline-light btn-sm w-100" id="btnPublicModeModal" onclick="enterPublicMode()">Lanjutkan Sebagai Publik (Read-Only)</button>
                 </div>
             </div>
         </div>
@@ -668,19 +667,9 @@
             loadCategoriesToUI();
             loadSecuritySettingsToUI();
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const isPub = urlParams.get('mode') === 'publik' || localStorage.getItem('kas_isPublic') === 'true';
-
-            if (isPub) {
-                enterPublicMode();
-            } else {
-                const isLogged = localStorage.getItem('kas_isLoggedIn');
-                if (isLogged === 'true') {
-                    enterAdminMode();
-                } else if (modalPinAuth) {
-                    document.getElementById('btnPublicModeModal').style.display = 'block';
-                    modalPinAuth.show();
-                }
+            // Selalu tampilkan modal PIN Admin saat aplikasi pertama kali dibuka
+            if (modalPinAuth) {
+                modalPinAuth.show();
             }
 
             renderBeranda();
@@ -703,7 +692,6 @@
         function enterAdminMode() {
             isAdminMode = true;
             localStorage.setItem('kas_isLoggedIn', 'true');
-            localStorage.setItem('kas_isPublic', 'false');
             document.getElementById('fabAdd').style.display = 'flex';
             document.getElementById('btnTambahSiswaContainer').style.display = 'block';
             
@@ -714,14 +702,12 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.3 (Admin)";
             
             resetInactivityTimer();
         }
 
         function enterPublicMode() {
             isAdminMode = false;
-            localStorage.setItem('kas_isPublic', 'true');
             clearTimeout(inactivityTimeout);
 
             document.getElementById('fabAdd').style.display = 'none';
@@ -739,21 +725,16 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.3 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
         // FUNGSI LOG OUT MANUAL ADMIN
         function adminLogout() {
-            showConfirm("Konfirmasi Log Out", "Apakah Anda yakin ingin keluar dari mode Admin?", () => {
+            showConfirm("Konfirmasi Log Out", "Apakah Anda yakin ingin keluar dari sesi Admin?", () => {
                 enterPublicMode();
-                showNotif("Berhasil Keluar", "Anda telah beralih ke Mode Publik (Read-Only).");
+                if(modalPinAuth) modalPinAuth.show();
+                showNotif("Berhasil Keluar", "Anda telah keluar dari sesi Admin.");
             });
-        }
-
-        function triggerCamouflageAdmin() {
-            document.getElementById('btnPublicModeModal').style.display = 'none';
-            modalPinAuth.show();
         }
 
         // PENGATURAN PERTANYAAN KEAMANAN LOKAL
@@ -1375,7 +1356,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.3.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.5.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1446,10 +1427,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.3
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.5
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=4.3').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=4.5').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
