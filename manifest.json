@@ -1,8 +1,9 @@
 {
-  "name": "Catatan Kas Kelas v2.1",
+  "name": "Catatan Kas Kelas",
   "short_name": "Kas Kelas",
-  "description": "Aplikasi pencatatan uang kas masuk dan keluar berbasis offline lokal dengan tema Gen Z Glow.",
-  "start_url": "index.html",
+  "description": "Aplikasi PWA Catatan Kas Kelas Gen Z",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0b091a",
   "theme_color": "#ff2a85",
