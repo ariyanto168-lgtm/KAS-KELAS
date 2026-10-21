@@ -257,7 +257,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v2.4 Gen Z</span>
+                <span class="badge bg-danger mt-1">v2.5 Gen Z</span>
             </div>
 
             <!-- PENGATURAN TEMA -->
@@ -272,6 +272,30 @@
                             <option value="emerald" class="bg-dark text-white">Electric Emerald & Dark</option>
                         </select>
                     </div>
+                </div>
+            </div>
+
+            <!-- EDIT NAMA KATEGORI IURAN -->
+            <div class="card card-custom mb-3">
+                <div class="card-body py-3 px-3">
+                    <h6 class="card-title text-info mb-2"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Nama Kategori Iuran</h6>
+                    <div class="mb-2">
+                        <label class="form-label small text-white-50">Kategori 1</label>
+                        <input type="text" class="form-control form-control-sm" id="editCat0" placeholder="Nama Kategori 1">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small text-white-50">Kategori 2</label>
+                        <input type="text" class="form-control form-control-sm" id="editCat1" placeholder="Nama Kategori 2">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small text-white-50">Kategori 3</label>
+                        <input type="text" class="form-control form-control-sm" id="editCat2" placeholder="Nama Kategori 3">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-white-50">Kategori 4</label>
+                        <input type="text" class="form-control form-control-sm" id="editCat3" placeholder="Nama Kategori 4">
+                    </div>
+                    <button class="btn btn-info btn-sm w-100 fw-bold" onclick="saveCategories()"><i class="fa-solid fa-floppy-disk me-2"></i>Simpan Nama Kategori</button>
                 </div>
             </div>
 
@@ -322,7 +346,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold">Versi 2.4</p>
+                <p class="text-white-50 small mb-1 fw-bold">Versi 2.5</p>
                 <p class="text-info small fw-bold" style="letter-spacing: 1px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -450,10 +474,7 @@
                     <div class="mb-2">
                         <label class="form-label small">Kategori Iuran</label>
                         <select class="form-select" id="inputKategori">
-                            <option value="Kas Mingguan">Kas Mingguan</option>
-                            <option value="Uang Ujian">Uang Ujian</option>
-                            <option value="Dana Sosial">Dana Sosial</option>
-                            <option value="Lainnya">Lainnya</option>
+                            <!-- Dirender dinamis lewat JS -->
                         </select>
                     </div>
                     <div class="mb-2">
@@ -487,6 +508,9 @@
         if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
         if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
         if (!localStorage.getItem('kas_schoolAddress')) localStorage.setItem('kas_schoolAddress', 'SMA Negeri 1 Nusantara');
+        if (!localStorage.getItem('kas_categories')) {
+            localStorage.setItem('kas_categories', JSON.stringify(['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya']));
+        }
 
         const savedTheme = localStorage.getItem('kas_theme') || 'pink';
         if (savedTheme !== 'pink') document.body.className = 'theme-' + savedTheme;
@@ -500,8 +524,8 @@
         let modalPinAuth, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
 
         window.addEventListener('DOMContentLoaded', () => {
-            // Inisialisasi info sekolah langsung agar tidak ada jeda "Memuat Kelas..."
             loadSchoolInfoToUI();
+            loadCategoriesToUI();
             document.getElementById('selectTheme').value = savedTheme;
 
             modalPinAuth = new bootstrap.Modal(document.getElementById('modalPinAuth'), { backdrop: 'static', keyboard: false });
@@ -511,9 +535,43 @@
             modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
             modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
 
-            // Tampilkan modal PIN secara instan dan aman
             modalPinAuth.show();
         });
+
+        function getCategories() {
+            return JSON.parse(localStorage.getItem('kas_categories')) || ['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya'];
+        }
+
+        function loadCategoriesToUI() {
+            const cats = getCategories();
+            for(let i=0; i<4; i++) {
+                const el = document.getElementById('editCat' + i);
+                if(el) el.value = cats[i] || '';
+            }
+            populateCategorySelect();
+        }
+
+        function saveCategories() {
+            let newCats = [];
+            for(let i=0; i<4; i++) {
+                let val = document.getElementById('editCat' + i).value.trim();
+                if(!val) val = 'Kategori ' + (i+1);
+                newCats.push(val);
+            }
+            localStorage.setItem('kas_categories', JSON.stringify(newCats));
+            loadCategoriesToUI();
+            renderBeranda();
+            showNotif("Sukses", "Nama kategori iuran berhasil diperbarui.");
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('inputKategori');
+            const cats = getCategories();
+            select.innerHTML = '';
+            cats.forEach(c => {
+                select.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+        }
 
         function loadSchoolInfoToUI() {
             const cName = localStorage.getItem('kas_className');
@@ -675,12 +733,15 @@
         }
 
         // TRANSAKSI & KATEGORI DASHBOARD KARTU
-        function openModalTransaksi(defaultKategori = 'Kas Mingguan') {
+        function openModalTransaksi(defaultKategori = null) {
             document.getElementById('inputTanggal').valueAsDate = new Date();
             document.getElementById('inputNominal').value = '';
             document.getElementById('inputKeterangan').value = '';
             document.getElementById('inputSiswaTransaksi').value = '';
-            document.getElementById('inputKategori').value = defaultKategori;
+            populateCategorySelect();
+            if(defaultKategori) {
+                document.getElementById('inputKategori').value = defaultKategori;
+            }
             modalAddTransaksi.show();
         }
 
@@ -713,13 +774,13 @@
 
         function renderCategoryCards() {
             const container = document.getElementById('categoryCardsContainer');
-            const categories = ['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya'];
+            const categories = getCategories();
             
             let html = '';
             categories.forEach(cat => {
                 let totalCat = 0;
                 kasData.transactions.forEach(t => {
-                    if ((t.category === cat || (!t.category && cat === 'Kas Mingguan')) && t.type === 'masuk') {
+                    if ((t.category === cat || (!t.category && cat === categories[0])) && t.type === 'masuk') {
                         totalCat += t.amount;
                     }
                 });
@@ -741,7 +802,8 @@
             const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-success"></i>' : '<i class="fa-solid fa-arrow-up text-danger"></i>';
             const color = isMasuk ? 'text-success' : 'text-danger';
             const sign = isMasuk ? '+' : '-';
-            const catBadge = `<span class="badge bg-secondary mb-1" style="font-size: 9px;">${t.category || 'Kas Mingguan'}</span>`;
+            const categories = getCategories();
+            const catBadge = `<span class="badge bg-secondary mb-1" style="font-size: 9px;">${t.category || categories[0]}</span>`;
             const namaSiswa = t.student ? `<small class="d-block text-info" style="font-size: 11px;"><i class="fa-solid fa-user me-1"></i>${t.student}</small>` : '';
 
             return `
@@ -808,7 +870,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.4.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.5.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
