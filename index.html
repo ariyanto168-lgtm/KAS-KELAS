@@ -16,14 +16,20 @@
         body { background-color: #f8f9fa; padding-top: 60px; padding-bottom: 80px; user-select: none; }
         .navbar-top { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .navbar-brand img { width: 30px; height: 30px; border-radius: 5px; margin-right: 8px; object-fit: cover;}
+        /* Fallback jika logo gagal diload */
+        .fallback-icon { font-size: 24px; margin-right: 8px; display: none; color: white;}
+        
         .bottom-nav { background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
         .nav-item-bottom { flex: 1; text-align: center; padding: 10px 0; color: #6c757d; cursor: pointer; text-decoration: none; font-size: 12px; }
         .nav-item-bottom i { font-size: 20px; display: block; margin-bottom: 3px; }
         .nav-item-bottom.active { color: #0d6efd; font-weight: bold; }
+        
         .page-section { display: none; animation: fadeIn 0.3s; }
         .page-section.active { display: block; }
         .fab { position: fixed; bottom: 85px; right: 20px; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; }
-        #installBanner { display: none; background: #fff3cd; color: #856404; padding: 10px 15px; border-bottom: 1px solid #ffeeba; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 56px; width: 100%; }
+        
+        #installBanner { display: none; background: #fff3cd; color: #856404; padding: 10px 15px; border-bottom: 1px solid #ffeeba; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 56px; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .list-group-item { border-radius: 10px !important; margin-bottom: 10px; border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .app-logo-large { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 15px;}
@@ -35,16 +41,21 @@
     <nav class="navbar navbar-dark bg-primary fixed-top navbar-top">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1 d-flex align-items-center">
-                <!-- Menggunakan Logo sebagai Icon Navbar -->
-                <img src="Logokaskelas.jpg" alt="Logo"> Kas Kelas
+                <i class="fa-solid fa-wallet fallback-icon" id="navFallbackIcon"></i>
+                <!-- Ditambahkan onerror untuk menangani gambar pecah -->
+                <img src="Logokaskelas.jpg" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
+                Kas Kelas
             </span>
         </div>
     </nav>
 
     <!-- PWA Install Banner -->
     <div id="installBanner">
-        <span><i class="fa-solid fa-download me-2"></i>Instal Aplikasi ke Layar Utama</span>
-        <button id="btnInstall" class="btn btn-sm btn-primary">Instal</button>
+        <span><i class="fa-solid fa-download me-2"></i>Instal Aplikasi Kas Kelas</span>
+        <div>
+            <button id="btnDismissInstall" class="btn btn-sm btn-light me-1" onclick="dismissInstall()">Batal</button>
+            <button id="btnInstall" class="btn btn-sm btn-primary">Instal</button>
+        </div>
     </div>
 
     <!-- MAIN CONTENT (SPA) -->
@@ -97,7 +108,7 @@
             <div id="sub-transaksi">
                 <div class="input-group mb-3 shadow-sm">
                     <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
-                    <input type="text" id="searchTransaksi" class="form-control border-start-0" placeholder="Cari keterangan / nama siswa..." onkeyup="renderBukuKas()">
+                    <input type="text" id="searchTransaksi" class="form-control border-start-0" placeholder="Cari keterangan / nama..." onkeyup="renderBukuKas()">
                 </div>
                 <div id="listBukuKas"></div>
             </div>
@@ -112,9 +123,10 @@
         <!-- HALAMAN PENGATURAN -->
         <div id="page-pengaturan" class="page-section">
             
-            <!-- Tampilan Logo Besar di Pengaturan -->
             <div class="text-center mb-4 mt-2">
-                <img src="Logokaskelas.jpg" alt="Logo Kas Kelas" class="app-logo-large">
+                <!-- Ditambahkan penanganan error gambar -->
+                <i class="fa-solid fa-wallet text-primary mb-2" style="font-size: 60px; display: none;" id="settingFallbackIcon"></i>
+                <img src="Logokaskelas.jpg" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
             </div>
 
@@ -129,7 +141,8 @@
                     </label>
                 </div>
             </div>
-            <div class="card shadow-sm border-0">
+            
+            <div class="card shadow-sm border-0 mb-3">
                 <div class="card-body">
                     <h6 class="card-title text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Zona Bahaya</h6>
                     <p class="text-muted small">Hapus seluruh data kas dan siswa dari perangkat ini.</p>
@@ -139,7 +152,7 @@
             
             <!-- Informasi Versi dan Powered By -->
             <div class="text-center mt-4 mb-2">
-                <p class="text-muted small mb-1 fw-bold">v1.1</p>
+                <p class="text-muted small mb-1 fw-bold">Versi 1.2</p>
                 <p class="text-muted small">Mode Offline-First aktif</p>
                 <p class="text-primary small fw-bold mt-2">Powered By Ari GPM</p>
             </div>
@@ -254,6 +267,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // --- PENANGANAN GAMBAR ERROR ---
+        function handleImageError(imgId, fallbackId) {
+            document.getElementById(imgId).style.display = 'none';
+            document.getElementById(fallbackId).style.display = 'inline-block';
+        }
+
         // --- INISIALISASI VARIABEL & UI ---
         let kasData = {
             transactions: JSON.parse(localStorage.getItem('kas_transactions')) || [],
@@ -335,7 +354,7 @@
         }
 
         function hapusSiswa(id) {
-            showConfirm("Hapus Siswa", "Yakin ingin menghapus siswa ini?", () => {
+            showConfirm("Hapus Siswa", "Yakin ingin menghapus siswa ini? Jika dihapus, namanya akan tetap ada di riwayat transaksi sebelumnya.", () => {
                 kasData.students = kasData.students.filter(s => s.id !== id);
                 saveToLocal();
             });
@@ -386,4 +405,171 @@
             
             kasData.transactions.push({
                 id: Date.now().toString(), type: jenis, date: tanggal,
-             
+                amount: nominal, desc: keterangan, student: siswa
+            });
+            
+            kasData.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort terbaru
+            saveToLocal();
+            modalAddTransaksi.hide();
+            showNotif("Sukses", "Transaksi berhasil dicatat.");
+        }
+
+        function hapusTransaksi(id) {
+            showConfirm("Hapus Transaksi", "Yakin ingin menghapus data kas ini?", () => {
+                kasData.transactions = kasData.transactions.filter(t => t.id !== id);
+                saveToLocal();
+            });
+        }
+
+        function renderTemplateTransaksi(t) {
+            const isMasuk = t.type === 'masuk';
+            const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-success"></i>' : '<i class="fa-solid fa-arrow-up text-danger"></i>';
+            const color = isMasuk ? 'text-success' : 'text-danger';
+            const sign = isMasuk ? '+' : '-';
+            const namaSiswa = t.student ? `<small class="d-block text-primary"><i class="fa-solid fa-user me-1"></i>${t.student}</small>` : '';
+
+            return `
+                <div class="list-group-item bg-white">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <div>
+                            <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i>${formatDate(t.date)}</small>
+                            <h6 class="mb-0 fw-bold mt-1">${t.desc}</h6>
+                            ${namaSiswa}
+                        </div>
+                        <div class="text-end">
+                            <span class="${color} fw-bold d-block">${icon} ${sign} ${formatRp(t.amount)}</span>
+                            <button class="btn btn-sm text-danger p-0 mt-2" onclick="hapusTransaksi('${t.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBeranda() {
+            let masuk = 0, keluar = 0;
+            kasData.transactions.forEach(t => {
+                if (t.type === 'masuk') masuk += t.amount;
+                else keluar += t.amount;
+            });
+            document.getElementById('saldoTotal').innerText = formatRp(masuk - keluar);
+            document.getElementById('totalMasuk').innerText = formatRp(masuk);
+            document.getElementById('totalKeluar').innerText = formatRp(keluar);
+
+            const list = document.getElementById('listBeranda');
+            const recent = kasData.transactions.slice(0, 5); // Ambil 5 terbaru
+            if(recent.length === 0) {
+                list.innerHTML = `<div class="text-center text-muted small">Belum ada transaksi.</div>`;
+            } else {
+                list.innerHTML = '<div class="list-group">' + recent.map(renderTemplateTransaksi).join('') + '</div>';
+            }
+        }
+
+        function renderBukuKas() {
+            const list = document.getElementById('listBukuKas');
+            const keyword = document.getElementById('searchTransaksi').value.toLowerCase();
+            
+            const filtered = kasData.transactions.filter(t => 
+                t.desc.toLowerCase().includes(keyword) || 
+                (t.student && t.student.toLowerCase().includes(keyword))
+            );
+
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center text-muted small py-4">Data tidak ditemukan.</div>`;
+            } else {
+                list.innerHTML = '<div class="list-group">' + filtered.map(renderTemplateTransaksi).join('') + '</div>';
+            }
+        }
+
+        // --- BACKUP & RESTORE (PENGATURAN) ---
+        function exportData() {
+            if(kasData.transactions.length === 0 && kasData.students.length === 0) {
+                return showNotif("Peringatan", "Tidak ada data untuk dibackup.");
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v1.2.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showNotif("Sukses", "File backup berhasil diunduh.");
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(imported.transactions && imported.students) {
+                        showConfirm("Restore Data", "Data saat ini akan tertimpa. Lanjutkan?", () => {
+                            kasData = imported;
+                            saveToLocal();
+                            document.getElementById('importFile').value = ''; // reset input
+                            showNotif("Sukses", "Data berhasil dipulihkan.");
+                        });
+                    } else {
+                        showNotif("Error", "Format file tidak valid.");
+                    }
+                } catch (error) {
+                    showNotif("Error", "Gagal membaca file JSON.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function confirmResetData() {
+            showConfirm("Peringatan Keras!", "Seluruh data transaksi dan siswa akan terhapus permanen dari HP ini. Anda yakin?", () => {
+                kasData = { transactions: [], students: [] };
+                saveToLocal();
+                showNotif("Reset Selesai", "Semua data telah dikosongkan.");
+            });
+        }
+
+        // --- PWA INSTALLATION LOGIC (PERBAIKAN) ---
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Tampilkan banner hanya jika belum di-dismiss
+            if(!sessionStorage.getItem('installDismissed')) {
+                document.getElementById('installBanner').style.display = 'flex';
+            }
+        });
+
+        function dismissInstall() {
+            document.getElementById('installBanner').style.display = 'none';
+            sessionStorage.setItem('installDismissed', 'true');
+        }
+
+        document.getElementById('btnInstall').addEventListener('click', async () => {
+            document.getElementById('installBanner').style.display = 'none';
+            if (deferredPrompt) {
+                try {
+                    await deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                } catch (error) {
+                    console.log("Error prompting install", error);
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW Registered', reg))
+                .catch(err => console.log('SW Reg Failed', err));
+            });
+        }
+
+        // Init Load
+        renderBeranda();
+        populateSiswaSelect();
+    </script>
+</body>
+</html>
