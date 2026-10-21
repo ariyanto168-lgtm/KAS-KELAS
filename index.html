@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Catatan Kas Kelas</title>
-    <!-- Path manifest diperbarui -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0d6efd">
     
@@ -28,7 +27,7 @@
         .page-section.active { display: block; }
         .fab { position: fixed; bottom: 85px; right: 20px; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; }
         
-        #installBanner { display: none; background: #fff3cd; color: #856404; padding: 10px 15px; border-bottom: 1px solid #ffeeba; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 56px; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        #installBanner { display: none; background: #fff3cd; color: #856404; padding: 10px 15px; border-bottom: 1px solid #ffeeba; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 56px; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .list-group-item { border-radius: 10px !important; margin-bottom: 10px; border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -42,8 +41,7 @@
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1 d-flex align-items-center">
                 <i class="fa-solid fa-wallet fallback-icon" id="navFallbackIcon"></i>
-                <!-- Path gambar diperbarui -->
-                <img src="Logokaskelas.jpg" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
+                <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 Kas Kelas
             </span>
         </div>
@@ -122,14 +120,13 @@
 
         <!-- HALAMAN PENGATURAN -->
         <div id="page-pengaturan" class="page-section">
-            
             <div class="text-center mb-4 mt-2">
                 <i class="fa-solid fa-wallet text-primary mb-2" style="font-size: 60px; display: none;" id="settingFallbackIcon"></i>
-                <img src="Logokaskelas.jpg" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
+                <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
             </div>
 
-            <!-- TOMBOL INSTAL MANUAL DITAMBAHKAN DI SINI -->
+            <!-- TOMBOL INSTAL MANUAL -->
             <div class="card shadow-sm border-0 mb-3" id="cardInstallManual" style="display: none;">
                 <div class="card-body">
                     <h6 class="card-title text-success"><i class="fa-solid fa-mobile-screen-button me-2"></i>Instal Aplikasi</h6>
@@ -159,7 +156,7 @@
             </div>
             
             <div class="text-center mt-4 mb-2">
-                <p class="text-muted small mb-1 fw-bold">Versi 1.4</p>
+                <p class="text-muted small mb-1 fw-bold">Versi 1.5</p>
                 <p class="text-muted small">Mode Offline-First aktif</p>
                 <p class="text-primary small fw-bold mt-2">Powered By Ari GPM</p>
             </div>
@@ -180,7 +177,7 @@
         </a>
     </nav>
 
-    <!-- MODAL CUSTOM: Notifikasi -->
+    <!-- MODAL NOTIFIKASI -->
     <div class="modal fade" id="modalNotif" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
             <div class="modal-content border-0 shadow">
@@ -194,7 +191,7 @@
         </div>
     </div>
 
-    <!-- MODAL CUSTOM: Konfirmasi -->
+    <!-- MODAL KONFIRMASI -->
     <div class="modal fade" id="modalConfirm" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
             <div class="modal-content border-0 shadow">
@@ -211,7 +208,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Tambah Siswa -->
+    <!-- MODAL TAMBAH SISWA -->
     <div class="modal fade" id="modalAddSiswa" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -230,7 +227,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Tambah Transaksi -->
+    <!-- MODAL TAMBAH TRANSAKSI -->
     <div class="modal fade" id="modalAddTransaksi" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -338,7 +335,6 @@
             renderBeranda(); renderBukuKas(); renderSiswa(); populateSiswaSelect();
         }
 
-        // SISWA
         function openModalSiswa() {
             document.getElementById('inputNamaSiswa').value = '';
             modalAddSiswa.show();
@@ -354,7 +350,7 @@
         }
 
         function hapusSiswa(id) {
-            showConfirm("Hapus Siswa", "Yakin ingin menghapus siswa ini? Jika dihapus, namanya akan tetap ada di riwayat transaksi sebelumnya.", () => {
+            showConfirm("Hapus Siswa", "Yakin ingin menghapus siswa ini?", () => {
                 kasData.students = kasData.students.filter(s => s.id !== id);
                 saveToLocal();
             });
@@ -385,7 +381,6 @@
             });
         }
 
-        // TRANSAKSI
         function openModalTransaksi() {
             document.getElementById('inputTanggal').valueAsDate = new Date();
             document.getElementById('inputNominal').value = '';
@@ -478,7 +473,6 @@
             }
         }
 
-        // --- BACKUP & RESTORE ---
         function exportData() {
             if(kasData.transactions.length === 0 && kasData.students.length === 0) {
                 return showNotif("Peringatan", "Tidak ada data untuk dibackup.");
@@ -486,7 +480,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v1.4.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v1.5.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -525,7 +519,6 @@
             });
         }
 
-        // --- PWA INSTALLATION LOGIC (V1.4) ---
         let deferredPrompt;
         const bannerInstal = document.getElementById('installBanner');
         const cardInstalManual = document.getElementById('cardInstallManual');
@@ -533,9 +526,7 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            
             cardInstalManual.style.display = 'block';
-
             if(!sessionStorage.getItem('installDismissed')) {
                 bannerInstal.style.display = 'flex';
             }
@@ -547,7 +538,6 @@
                 try {
                     await deferredPrompt.prompt();
                     const { outcome } = await deferredPrompt.userChoice;
-                    console.log(`Respon Instal: ${outcome}`);
                     if (outcome === 'accepted') {
                         cardInstalManual.style.display = 'none';
                     }
@@ -571,10 +561,8 @@
         window.addEventListener('appinstalled', () => {
             cardInstalManual.style.display = 'none';
             bannerInstal.style.display = 'none';
-            console.log('Aplikasi sukses diinstal');
         });
 
-        // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
@@ -583,7 +571,6 @@
             });
         }
 
-        // Init Load
         renderBeranda();
         populateSiswaSelect();
     </script>
