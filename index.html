@@ -49,6 +49,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.4); 
             border-bottom: 1px solid rgba(255,255,255,0.2);
             padding: 8px 15px;
+            z-index: 1030;
         }
         .navbar-brand img { 
             width: 45px; 
@@ -66,6 +67,7 @@
             backdrop-filter: blur(15px);
             border-top: 1px solid var(--genz-border);
             box-shadow: 0 -4px 20px rgba(0,0,0,0.5); 
+            z-index: 1030;
         }
         .nav-item-bottom { flex: 1; text-align: center; padding: 10px 0; color: #a0aec0; cursor: pointer; text-decoration: none; font-size: 12px; }
         .nav-item-bottom i { font-size: 20px; display: block; margin-bottom: 3px; }
@@ -80,7 +82,7 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
             background: linear-gradient(135deg, var(--genz-pink), var(--genz-purple));
             border: none; color: white;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 1000; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 1020; 
         }
 
         #installBanner { display: none; background: linear-gradient(135deg, #ffe066, #ff922b); color: #333; padding: 10px 15px; border-bottom: 1px solid #ffd43b; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 70px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold;}
@@ -144,6 +146,7 @@
             border: 1px solid var(--genz-border);
             border-radius: 20px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            z-index: 1060;
         }
         .app-logo-large { width: 90px; height: 90px; border-radius: 20px; object-fit: cover; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 2px solid var(--genz-pink); margin-bottom: 15px;}
     </style>
@@ -158,7 +161,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;">Memuat Kelas...</small>
+                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;"></small>
                 </div>
             </span>
         </div>
@@ -180,8 +183,8 @@
         <div id="page-beranda" class="page-section active">
             <!-- Header Info Kelas -->
             <div class="card card-custom p-3 text-center mb-3">
-                <h6 id="displayClassName" class="fw-bold mb-1 text-info">--</h6>
-                <p id="displaySchoolAddress" class="text-white-50 small mb-0" style="font-size: 12px;"><i class="fa-solid fa-location-dot me-1"></i>--</p>
+                <h6 id="displayClassName" class="fw-bold mb-1 text-info"></h6>
+                <p id="displaySchoolAddress" class="text-white-50 small mb-0" style="font-size: 12px;"><i class="fa-solid fa-location-dot me-1"></i></p>
             </div>
 
             <!-- Total Saldo Card -->
@@ -213,9 +216,7 @@
 
             <!-- MENU KATEGORI IURAN (MODE KARTU INTERAKTIF) -->
             <h6 class="mb-2 text-info fw-bold" style="font-size: 14px;"><i class="fa-solid fa-layer-group me-2"></i>Kategori Iuran Kas</h6>
-            <div class="row g-2 mb-3" id="categoryCardsContainer">
-                <!-- Dirender otomatis lewat JS -->
-            </div>
+            <div class="row g-2 mb-3" id="categoryCardsContainer"></div>
 
             <h6 class="mb-2 text-info fw-bold" style="font-size: 14px;"><i class="fa-solid fa-clock-rotate-left me-2"></i>Transaksi Terakhir</h6>
             <div id="listBeranda"></div>
@@ -256,7 +257,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v2.3 Gen Z</span>
+                <span class="badge bg-danger mt-1">v2.4 Gen Z</span>
             </div>
 
             <!-- PENGATURAN TEMA -->
@@ -321,7 +322,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold">Versi 2.3</p>
+                <p class="text-white-50 small mb-1 fw-bold">Versi 2.4</p>
                 <p class="text-info small fw-bold" style="letter-spacing: 1px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -398,4 +399,492 @@
 
     <!-- MODAL KONFIRMASI -->
     <div class="modal fade" id="modalConfirm" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered w-75 mx
+        <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
+            <div class="modal-content text-center p-3">
+                <i class="fa-solid fa-circle-question text-warning mb-2" style="font-size: 35px;"></i>
+                <h6 id="confirmTitle" class="fw-bold">Konfirmasi</h6>
+                <p id="confirmMessage" class="text-white-50 small mb-3">Apakah yakin?</p>
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-light w-50" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger w-50 fw-bold" id="btnConfirmAction">Yakin</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH SISWA -->
+    <div class="modal fade" id="modalAddSiswa" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold">Tambah Siswa</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small">Nama Lengkap Siswa</label>
+                        <input type="text" class="form-control" id="inputNamaSiswa" placeholder="Nama siswa...">
+                    </div>
+                    <button class="btn btn-info w-100 fw-bold" onclick="saveSiswa()">Simpan Siswa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAMBAH TRANSAKSI -->
+    <div class="modal fade" id="modalAddTransaksi" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold">Catat Transaksi</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label small">Jenis Transaksi</label>
+                        <select class="form-select" id="inputJenis">
+                            <option value="masuk" class="bg-dark text-white">Uang Masuk (Bayar Kas)</option>
+                            <option value="keluar" class="bg-dark text-white">Uang Keluar (Pengeluaran)</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Kategori Iuran</label>
+                        <select class="form-select" id="inputKategori">
+                            <option value="Kas Mingguan">Kas Mingguan</option>
+                            <option value="Uang Ujian">Uang Ujian</option>
+                            <option value="Dana Sosial">Dana Sosial</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Nama Siswa (Pencarian Dinamis)</label>
+                        <input type="text" class="form-control" id="inputSiswaTransaksi" list="listDataSiswa" placeholder="Ketik nama siswa...">
+                        <datalist id="listDataSiswa"></datalist>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Tanggal</label>
+                        <input type="date" class="form-control" id="inputTanggal">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Nominal (Rp)</label>
+                        <input type="number" class="form-control" id="inputNominal" placeholder="Contoh: 5000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small">Keterangan</label>
+                        <textarea class="form-control" id="inputKeterangan" rows="2" placeholder="Keterangan transaksi..."></textarea>
+                    </div>
+                    <button class="btn btn-info w-100 fw-bold" onclick="saveTransaksi()">Simpan Transaksi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- INISIALISASI LOCALSTORAGE ---
+        if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
+        if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
+        if (!localStorage.getItem('kas_schoolAddress')) localStorage.setItem('kas_schoolAddress', 'SMA Negeri 1 Nusantara');
+
+        const savedTheme = localStorage.getItem('kas_theme') || 'pink';
+        if (savedTheme !== 'pink') document.body.className = 'theme-' + savedTheme;
+
+        function changeTheme(themeName) {
+            document.body.className = themeName === 'pink' ? '' : 'theme-' + themeName;
+            localStorage.setItem('kas_theme', themeName);
+        }
+
+        // --- DEKLARASI MODAL BOOTSTRAP ---
+        let modalPinAuth, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Inisialisasi info sekolah langsung agar tidak ada jeda "Memuat Kelas..."
+            loadSchoolInfoToUI();
+            document.getElementById('selectTheme').value = savedTheme;
+
+            modalPinAuth = new bootstrap.Modal(document.getElementById('modalPinAuth'), { backdrop: 'static', keyboard: false });
+            modalChangePin = new bootstrap.Modal(document.getElementById('modalChangePin'));
+            modalNotif = new bootstrap.Modal(document.getElementById('modalNotif'));
+            modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirm'));
+            modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
+            modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
+
+            // Tampilkan modal PIN secara instan dan aman
+            modalPinAuth.show();
+        });
+
+        function loadSchoolInfoToUI() {
+            const cName = localStorage.getItem('kas_className');
+            const cAddress = localStorage.getItem('kas_schoolAddress');
+            document.getElementById('headerClassName').innerText = cName;
+            document.getElementById('displayClassName').innerText = cName;
+            document.getElementById('displaySchoolAddress').innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${cAddress}`;
+            document.getElementById('editClassName').value = cName;
+            document.getElementById('editSchoolAddress').value = cAddress;
+        }
+
+        function saveSchoolInfo() {
+            const cName = document.getElementById('editClassName').value.trim();
+            const cAddress = document.getElementById('editSchoolAddress').value.trim();
+            if (!cName || !cAddress) return showNotif("Error", "Nama kelas dan alamat tidak boleh kosong!");
+            localStorage.setItem('kas_className', cName);
+            localStorage.setItem('kas_schoolAddress', cAddress);
+            loadSchoolInfoToUI();
+            showNotif("Sukses", "Info kelas diperbarui.");
+        }
+
+        function verifyPinLogin() {
+            const pinInput = document.getElementById('inputPinLogin');
+            const enteredPin = pinInput.value.trim();
+            const savedPin = localStorage.getItem('kas_pin');
+            pinInput.value = '';
+            if (enteredPin === savedPin) {
+                modalPinAuth.hide();
+            } else {
+                showNotif("Gagal", "PIN salah!");
+            }
+        }
+
+        function openModalChangePin() {
+            document.getElementById('inputOldPin').value = '';
+            document.getElementById('inputNewPin').value = '';
+            document.getElementById('inputConfirmPin').value = '';
+            modalChangePin.show();
+        }
+
+        function saveNewPin() {
+            const oldPin = document.getElementById('inputOldPin').value.trim();
+            const newPin = document.getElementById('inputNewPin').value.trim();
+            const confirmPin = document.getElementById('inputConfirmPin').value.trim();
+            const savedPin = localStorage.getItem('kas_pin');
+
+            if (!oldPin || !newPin || !confirmPin) return showNotif("Error", "Semua kolom wajib diisi!");
+            if (oldPin !== savedPin) return showNotif("Error", "PIN lama salah!");
+            if (newPin !== confirmPin) return showNotif("Error", "Konfirmasi PIN tidak cocok!");
+            if (newPin.length < 4) return showNotif("Error", "PIN minimal 4 karakter!");
+
+            localStorage.setItem('kas_pin', newPin);
+            modalChangePin.hide();
+            showNotif("Sukses", "PIN berhasil diperbarui.");
+        }
+
+        function handleImageError(imgId, fallbackId) {
+            document.getElementById(imgId).style.display = 'none';
+            document.getElementById(fallbackId).style.display = 'inline-block';
+        }
+
+        let kasData = {
+            transactions: JSON.parse(localStorage.getItem('kas_transactions')) || [],
+            students: JSON.parse(localStorage.getItem('kas_students')) || []
+        };
+        let confirmCallback = null;
+
+        function showNotif(title, message) {
+            document.getElementById('notifTitle').innerText = title;
+            document.getElementById('notifMessage').innerText = message;
+            modalNotif.show();
+        }
+
+        function showConfirm(title, message, callback) {
+            document.getElementById('confirmTitle').innerText = title;
+            document.getElementById('confirmMessage').innerText = message;
+            confirmCallback = callback;
+            modalConfirm.show();
+        }
+
+        document.getElementById('btnConfirmAction').addEventListener('click', () => {
+            if(confirmCallback) confirmCallback();
+            modalConfirm.hide();
+        });
+
+        const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        const formatDate = (dateStr) => {
+            const date = new Date(dateStr);
+            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth()+1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        };
+
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.querySelectorAll('.nav-item-bottom').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            if(pageId === 'beranda') renderBeranda();
+            if(pageId === 'data') { renderBukuKas(); renderSiswa(); }
+        }
+
+        function switchDataTab(tab) {
+            document.getElementById('sub-transaksi').style.display = tab === 'transaksi' ? 'block' : 'none';
+            document.getElementById('sub-siswa').style.display = tab === 'siswa' ? 'block' : 'none';
+            document.getElementById('tab-transaksi').classList.toggle('active', tab === 'transaksi');
+            document.getElementById('tab-siswa').classList.toggle('active', tab === 'siswa');
+        }
+
+        function saveToLocal() {
+            localStorage.setItem('kas_transactions', JSON.stringify(kasData.transactions));
+            localStorage.setItem('kas_students', JSON.stringify(kasData.students));
+            renderBeranda(); renderBukuKas(); renderSiswa(); populateSiswaDatalist();
+        }
+
+        // SISWA
+        function openModalSiswa() {
+            document.getElementById('inputNamaSiswa').value = '';
+            modalAddSiswa.show();
+        }
+
+        function saveSiswa() {
+            const nama = document.getElementById('inputNamaSiswa').value.trim();
+            if (!nama) return showNotif("Error", "Nama siswa kosong!");
+            kasData.students.push({ id: Date.now().toString(), name: nama });
+            saveToLocal();
+            modalAddSiswa.hide();
+            showNotif("Sukses", "Siswa ditambahkan.");
+        }
+
+        function hapusSiswa(id) {
+            showConfirm("Hapus Siswa", "Yakin menghapus siswa ini?", () => {
+                kasData.students = kasData.students.filter(s => s.id !== id);
+                saveToLocal();
+            });
+        }
+
+        function renderSiswa() {
+            const list = document.getElementById('listSiswa');
+            list.innerHTML = '';
+            if (kasData.students.length === 0) {
+                list.innerHTML = `<div class="text-center text-white-50 small py-3">Belum ada data siswa.</div>`;
+                return;
+            }
+            kasData.students.forEach(s => {
+                list.innerHTML += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center py-2">
+                        <span class="fw-bold text-white"><i class="fa-solid fa-user text-info me-2"></i>${s.name}</span>
+                        <button class="btn btn-sm text-danger p-0" onclick="hapusSiswa('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function populateSiswaDatalist() {
+            const datalist = document.getElementById('listDataSiswa');
+            datalist.innerHTML = '';
+            kasData.students.forEach(s => {
+                datalist.innerHTML += `<option value="${s.name}">`;
+            });
+        }
+
+        // TRANSAKSI & KATEGORI DASHBOARD KARTU
+        function openModalTransaksi(defaultKategori = 'Kas Mingguan') {
+            document.getElementById('inputTanggal').valueAsDate = new Date();
+            document.getElementById('inputNominal').value = '';
+            document.getElementById('inputKeterangan').value = '';
+            document.getElementById('inputSiswaTransaksi').value = '';
+            document.getElementById('inputKategori').value = defaultKategori;
+            modalAddTransaksi.show();
+        }
+
+        function saveTransaksi() {
+            const jenis = document.getElementById('inputJenis').value;
+            const kategori = document.getElementById('inputKategori').value;
+            const tanggal = document.getElementById('inputTanggal').value;
+            const nominal = parseInt(document.getElementById('inputNominal').value);
+            const keterangan = document.getElementById('inputKeterangan').value.trim();
+            const siswa = document.getElementById('inputSiswaTransaksi').value.trim();
+
+            if (!tanggal || !nominal || !keterangan) return showNotif("Error", "Lengkapi tanggal, nominal, dan keterangan!");
+            
+            kasData.transactions.push({
+                id: Date.now().toString(), type: jenis, category: kategori, date: tanggal,
+                amount: nominal, desc: keterangan, student: siswa
+            });
+            kasData.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            saveToLocal();
+            modalAddTransaksi.hide();
+            showNotif("Sukses", "Transaksi dicatat.");
+        }
+
+        function hapusTransaksi(id) {
+            showConfirm("Hapus Transaksi", "Yakin menghapus transaksi ini?", () => {
+                kasData.transactions = kasData.transactions.filter(t => t.id !== id);
+                saveToLocal();
+            });
+        }
+
+        function renderCategoryCards() {
+            const container = document.getElementById('categoryCardsContainer');
+            const categories = ['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya'];
+            
+            let html = '';
+            categories.forEach(cat => {
+                let totalCat = 0;
+                kasData.transactions.forEach(t => {
+                    if ((t.category === cat || (!t.category && cat === 'Kas Mingguan')) && t.type === 'masuk') {
+                        totalCat += t.amount;
+                    }
+                });
+
+                html += `
+                    <div class="col-6">
+                        <div class="card-category" onclick="openModalTransaksi('${cat}')">
+                            <small class="text-white-50 d-block mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder-open me-1"></i>${cat}</small>
+                            <span class="fw-bold text-info" style="font-size: 13px;">${formatRp(totalCat)}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderTemplateTransaksi(t) {
+            const isMasuk = t.type === 'masuk';
+            const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-success"></i>' : '<i class="fa-solid fa-arrow-up text-danger"></i>';
+            const color = isMasuk ? 'text-success' : 'text-danger';
+            const sign = isMasuk ? '+' : '-';
+            const catBadge = `<span class="badge bg-secondary mb-1" style="font-size: 9px;">${t.category || 'Kas Mingguan'}</span>`;
+            const namaSiswa = t.student ? `<small class="d-block text-info" style="font-size: 11px;"><i class="fa-solid fa-user me-1"></i>${t.student}</small>` : '';
+
+            return `
+                <div class="list-group-item py-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <div class="d-flex align-items-center gap-2">
+                                <small class="text-white-50" style="font-size: 10px;"><i class="fa-regular fa-calendar me-1"></i>${formatDate(t.date)}</small>
+                                ${catBadge}
+                            </div>
+                            <h6 class="mb-0 fw-bold mt-1 text-white" style="font-size: 13px;">${t.desc}</h6>
+                            ${namaSiswa}
+                        </div>
+                        <div class="text-end">
+                            <span class="${color} fw-bold d-block" style="font-size: 13px;">${icon} ${sign} ${formatRp(t.amount)}</span>
+                            <button class="btn btn-sm text-danger p-0 mt-1" style="font-size: 11px;" onclick="hapusTransaksi('${t.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBeranda() {
+            let masuk = 0, keluar = 0;
+            kasData.transactions.forEach(t => {
+                if (t.type === 'masuk') masuk += t.amount;
+                else keluar += t.amount;
+            });
+            document.getElementById('saldoTotal').innerText = formatRp(masuk - keluar);
+            document.getElementById('totalMasuk').innerText = formatRp(masuk);
+            document.getElementById('totalKeluar').innerText = formatRp(keluar);
+
+            renderCategoryCards();
+
+            const list = document.getElementById('listBeranda');
+            const recent = kasData.transactions.slice(0, 5); 
+            if(recent.length === 0) {
+                list.innerHTML = `<div class="text-center text-white-50 small py-2">Belum ada transaksi.</div>`;
+            } else {
+                list.innerHTML = '<div class="list-group">' + recent.map(renderTemplateTransaksi).join('') + '</div>';
+            }
+        }
+
+        function renderBukuKas() {
+            const list = document.getElementById('listBukuKas');
+            const keyword = document.getElementById('searchTransaksi').value.toLowerCase();
+            const filtered = kasData.transactions.filter(t => 
+                t.desc.toLowerCase().includes(keyword) || 
+                (t.student && t.student.toLowerCase().includes(keyword)) ||
+                (t.category && t.category.toLowerCase().includes(keyword))
+            );
+
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center text-white-50 small py-3">Data tidak ditemukan.</div>`;
+            } else {
+                list.innerHTML = '<div class="list-group">' + filtered.map(renderTemplateTransaksi).join('') + '</div>';
+            }
+        }
+
+        function exportData() {
+            if(kasData.transactions.length === 0 && kasData.students.length === 0) {
+                return showNotif("Peringatan", "Tidak ada data untuk dibackup.");
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.4.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showNotif("Sukses", "Backup diunduh.");
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(imported.transactions && imported.students) {
+                        showConfirm("Restore Data", "Timpa data saat ini?", () => {
+                            kasData = imported;
+                            saveToLocal();
+                            document.getElementById('importFile').value = ''; 
+                            showNotif("Sukses", "Data dipulihkan.");
+                        });
+                    } else {
+                        showNotif("Error", "File tidak valid.");
+                    }
+                } catch (error) {
+                    showNotif("Error", "Gagal baca JSON.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function confirmResetData() {
+            showConfirm("Peringatan", "Semua data akan dihapus permanen?", () => {
+                kasData = { transactions: [], students: [] };
+                saveToLocal();
+                showNotif("Reset", "Data dikosongkan.");
+            });
+        }
+
+        let deferredPrompt;
+        const bannerInstal = document.getElementById('installBanner');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if(!sessionStorage.getItem('installDismissed')) {
+                bannerInstal.style.display = 'flex';
+            }
+        });
+
+        async function triggerInstallPrompt() {
+            if (deferredPrompt) {
+                bannerInstal.style.display = 'none';
+                try {
+                    await deferredPrompt.prompt();
+                } catch (error) {}
+                deferredPrompt = null;
+            } else {
+                showNotif("Info", "Gunakan menu browser 'Tambahkan ke Layar Utama'.");
+            }
+        }
+
+        function dismissInstall() {
+            bannerInstal.style.display = 'none';
+            sessionStorage.setItem('installDismissed', 'true');
+        }
+
+        document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+            });
+        }
+
+        renderBeranda();
+        populateSiswaDatalist();
+    </script>
+</body>
+</html>
