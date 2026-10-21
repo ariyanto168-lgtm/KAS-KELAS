@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kas-kelas-v3.0';
+const CACHE_NAME = 'kas-kelas-v3.2';
 const urlsToCache = [
   './',
   './index.html',
@@ -9,15 +9,17 @@ const urlsToCache = [
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js'
 ];
 
-// Install & Cache
+// Install Event & Force Update
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Paksa versi baru langsung aktif
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
-// Hapus Cache Versi Lama
+// Activate Event & Purge Old Cache
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
@@ -32,8 +34,14 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch Resource
+// Fetch Strategy: Offline First dengan Navigasi Fallback
 self.addEventListener('fetch', event => {
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request);
