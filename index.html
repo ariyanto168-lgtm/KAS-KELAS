@@ -181,7 +181,7 @@
 
         <!-- HALAMAN BERANDA -->
         <div id="page-beranda" class="page-section active">
-            <!-- Header Info Kelas & Pengurus (Diberikan Default Text) -->
+            <!-- Header Info Kelas & Pengurus -->
             <div class="card card-custom p-3 text-center mb-3">
                 <h6 id="displayClassName" class="fw-bold mb-1 text-info">Kelas XII IPA 1</h6>
                 <p id="displaySchoolAddress" class="text-white-50 small mb-2" style="font-size: 12px;"><i class="fa-solid fa-location-dot me-1"></i>SMA Negeri 1 Nusantara</p>
@@ -274,7 +274,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v3.2 Gen Z</span>
+                <span class="badge bg-danger mt-1">v3.3 Gen Z</span>
             </div>
 
             <!-- SHARE LINK PUBLIK VIA WA -->
@@ -388,7 +388,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.2">Versi 3.2 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.3">Versi 3.3 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -397,13 +397,13 @@
 
     <!-- Bottom Navigation -->
     <nav class="fixed-bottom bottom-nav d-flex">
-        <a class="nav-item-bottom active" onclick="switchPage('beranda', this)">
+        <a class="nav-item-bottom active" id="navItemBeranda" onclick="switchPage('beranda', this)">
             <i class="fa-solid fa-house"></i> Beranda
         </a>
-        <a class="nav-item-bottom" onclick="switchPage('data', this)">
+        <a class="nav-item-bottom" id="navItemData" onclick="switchPage('data', this)">
             <i class="fa-solid fa-list-check"></i> Data
         </a>
-        <a class="nav-item-bottom" onclick="switchPage('pengaturan', this)">
+        <a class="nav-item-bottom" id="navItemPengaturan" onclick="switchPage('pengaturan', this)">
             <i class="fa-solid fa-gear"></i> Pengaturan
         </a>
     </nav>
@@ -419,7 +419,8 @@
                         <input type="password" class="form-control text-center fw-bold fs-4" id="inputPinLogin" placeholder="PIN Akses..." autocomplete="current-password">
                     </div>
                     <button class="btn btn-info w-100 fw-bold py-2 mb-2" onclick="verifyPinLogin()">Masuk Admin</button>
-                    <button class="btn btn-outline-light btn-sm w-100" onclick="enterPublicMode()">Lanjutkan Sebagai Publik (Read-Only)</button>
+                    <!-- Tombol Mode Publik disembunyikan saat login admin -->
+                    <button class="btn btn-outline-light btn-sm w-100" id="btnPublicModeModal" onclick="enterPublicMode()">Lanjutkan Sebagai Publik (Read-Only)</button>
                 </div>
             </div>
         </div>
@@ -547,7 +548,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // INISIALISASI PENYIMPANAN LOKAL DENGAN VALIDAISI LANGSUNG
         function initLocalStorage() {
             if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
             if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
@@ -580,7 +580,6 @@
             kasData.students = JSON.parse(localStorage.getItem('kas_students')) || [];
         } catch (e) { kasData.students = []; }
 
-        // FUNGSI UTAMA RENDER LANGSUNG DILAKUKAN TANPA MENUNGGU PARENT EVENT
         function initAppUI() {
             loadSchoolInfoToUI();
             loadPengurusToUI();
@@ -596,6 +595,7 @@
                 if (isLogged === 'true') {
                     enterAdminMode();
                 } else if (modalPinAuth) {
+                    document.getElementById('btnPublicModeModal').style.display = 'block';
                     modalPinAuth.show();
                 }
             }
@@ -624,11 +624,15 @@
             document.getElementById('fabAdd').style.display = 'flex';
             document.getElementById('btnTambahSiswaContainer').style.display = 'block';
             
+            // Tampilkan icon Pengaturan di bottom nav untuk Admin
+            const navPengaturan = document.getElementById('navItemPengaturan');
+            if (navPengaturan) navPengaturan.style.display = 'block';
+
             ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.2 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.3 (Admin)";
         }
 
         function enterPublicMode() {
@@ -638,15 +642,27 @@
             document.getElementById('fabAdd').style.display = 'none';
             document.getElementById('btnTambahSiswaContainer').style.display = 'none';
 
+            // Sembunyikan icon Pengaturan di bottom nav untuk Publik
+            const navPengaturan = document.getElementById('navItemPengaturan');
+            if (navPengaturan) navPengaturan.style.display = 'none';
+
+            // Jika sedang di halaman pengaturan, alihkan ke beranda
+            const activePage = document.querySelector('.page-section.active');
+            if (activePage && activePage.id === 'page-pengaturan') {
+                switchPage('beranda', document.getElementById('navItemBeranda'));
+            }
+
             ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.2 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.3 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
         function triggerCamouflageAdmin() {
+            // Sembunyikan tombol Mode Publik saat membuka login PIN Admin
+            document.getElementById('btnPublicModeModal').style.display = 'none';
             modalPinAuth.show();
         }
 
@@ -682,8 +698,9 @@
         function shareToWhatsApp() {
             let masuk = 0, keluar = 0;
             kasData.transactions.forEach(t => {
-                if (t.type === 'masuk') masuk += t.amount;
-                else keluar += t.amount;
+                const amt = Number(t.amount) || 0;
+                if (t.type === 'masuk') masuk += amt;
+                else if (t.type === 'keluar') keluar += amt;
             });
             const saldoAkhir = masuk - keluar;
             const cName = localStorage.getItem('kas_className') || 'Kelas XII IPA 1';
@@ -952,7 +969,7 @@
                 );
 
                 if (paidTx.length > 0) {
-                    let totalBayar = paidTx.reduce((sum, t) => sum + t.amount, 0);
+                    let totalBayar = paidTx.reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
                     html += `
                         <div class="list-group-item py-2 border-success">
                             <div class="d-flex justify-content-between align-items-center">
@@ -1008,7 +1025,7 @@
             document.getElementById('inputJenis').value = t.type;
             document.getElementById('inputKategori').value = t.category || getCategories()[0];
             document.getElementById('inputTanggal').value = t.date;
-            document.getElementById('inputNominal').value = t.amount;
+            document.getElementById('inputNominal').value = Number(t.amount) || 0;
             document.getElementById('inputKeterangan').value = t.desc;
             document.getElementById('inputSiswaTransaksi').value = t.student || '';
             
@@ -1021,11 +1038,11 @@
             const jenis = document.getElementById('inputJenis').value;
             const kategori = document.getElementById('inputKategori').value;
             const tanggal = document.getElementById('inputTanggal').value;
-            const nominal = parseInt(document.getElementById('inputNominal').value);
+            const nominal = Number(document.getElementById('inputNominal').value) || 0;
             const keterangan = document.getElementById('inputKeterangan').value.trim();
             const siswa = document.getElementById('inputSiswaTransaksi').value.trim();
 
-            if (!tanggal || !nominal || !keterangan) return showNotif("Error", "Lengkapi tanggal, nominal, dan keterangan!");
+            if (!tanggal || nominal <= 0 || !keterangan) return showNotif("Error", "Lengkapi tanggal, nominal valid, dan keterangan!");
             
             if(editId) {
                 const index = kasData.transactions.findIndex(item => item.id === editId);
@@ -1061,8 +1078,8 @@
             if (isAdminMode) {
                 openModalTransaksi(cat);
             } else {
-                const navBtns = document.querySelectorAll('.nav-item-bottom');
-                switchPage('data', navBtns[1]);
+                switchPage('data', document.getElementById('navItemData'));
+                switchDataTab('rekap');
                 const selectEl = document.getElementById('selectRekapKategori');
                 if (selectEl) {
                     selectEl.value = cat;
@@ -1071,6 +1088,7 @@
             }
         }
 
+        // KOREKSI PERHITUNGAN KARTU KATEGORI (BERSIH: MASUK - KELUAR)
         function renderCategoryCards() {
             const container = document.getElementById('categoryCardsContainer');
             if(!container) return;
@@ -1080,8 +1098,11 @@
             categories.forEach(cat => {
                 let totalCat = 0;
                 kasData.transactions.forEach(t => {
-                    if ((t.category === cat || (!t.category && cat === categories[0])) && t.type === 'masuk') {
-                        totalCat += t.amount;
+                    const tCat = t.category || categories[0];
+                    if (tCat === cat) {
+                        const amt = Number(t.amount) || 0;
+                        if (t.type === 'masuk') totalCat += amt;
+                        else if (t.type === 'keluar') totalCat -= amt;
                     }
                 });
 
@@ -1089,7 +1110,7 @@
                     <div class="col-6">
                         <div class="card-category" onclick="handleCategoryClick('${cat.replace(/'/g, "\\'")}')">
                             <small class="text-white-50 d-block mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder-open me-1"></i>${cat}</small>
-                            <span class="fw-bold text-info" style="font-size: 13px;">${formatRp(totalCat)}</span>
+                            <span class="fw-bold ${totalCat < 0 ? 'text-danger' : 'text-info'}" style="font-size: 13px;">${formatRp(totalCat)}</span>
                         </div>
                     </div>
                 `;
@@ -1128,7 +1149,7 @@
                             ${namaSiswa}
                         </div>
                         <div class="text-end">
-                            <span class="${color} fw-bold d-block" style="font-size: 13px;">${icon} ${sign} ${formatRp(t.amount)}</span>
+                            <span class="${color} fw-bold d-block" style="font-size: 13px;">${icon} ${sign} ${formatRp(Number(t.amount) || 0)}</span>
                             ${actionButtons}
                         </div>
                     </div>
@@ -1136,6 +1157,7 @@
             `;
         }
 
+        // KOREKSI TOTAL SALDO, PEMASUKAN, PENGELUARAN
         function renderBeranda() {
             loadSchoolInfoToUI();
             loadPengurusToUI();
@@ -1143,9 +1165,11 @@
 
             let masuk = 0, keluar = 0;
             kasData.transactions.forEach(t => {
-                if (t.type === 'masuk') masuk += t.amount;
-                else keluar += t.amount;
+                const amt = Number(t.amount) || 0;
+                if (t.type === 'masuk') masuk += amt;
+                else if (t.type === 'keluar') keluar += amt;
             });
+            
             document.getElementById('saldoTotal').innerText = formatRp(masuk - keluar);
             document.getElementById('totalMasuk').innerText = formatRp(masuk);
             document.getElementById('totalKeluar').innerText = formatRp(keluar);
@@ -1185,7 +1209,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.2.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.3.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1256,10 +1280,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.2
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.3
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=3.2').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=3.3').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
