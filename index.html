@@ -52,14 +52,14 @@
             z-index: 1030;
         }
         .navbar-brand img { 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 12px; 
+            width: 68px; 
+            height: 68px; 
+            border-radius: 14px; 
             object-fit: cover; 
             box-shadow: 0 0 10px rgba(255,255,255,0.6);
             border: 2px solid #fff;
         }
-        .fallback-icon { font-size: 28px; margin-right: 8px; display: none; color: white;}
+        .fallback-icon { font-size: 38px; margin-right: 8px; display: none; color: white;}
 
         /* Bottom Navigation */
         .bottom-nav { 
@@ -161,7 +161,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v3.9 • Powered By Ari GPM</small>
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v4.0 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -274,7 +274,16 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v3.9 Gen Z</span>
+                <span class="badge bg-danger mt-1">v4.0 Gen Z</span>
+            </div>
+
+            <!-- TOMBOL LOGOUT / KELUAR ADMIN (Hanya Admin) -->
+            <div class="card card-custom mb-3 border-danger" id="adminSectionLogout">
+                <div class="card-body py-3 px-3 text-center">
+                    <h6 class="card-title text-danger mb-2"><i class="fa-solid fa-right-from-bracket me-2"></i>Sesi Admin Aktif</h6>
+                    <p class="text-white-50 small mb-3">Keluar dari mode admin dan kembali ke mode publik read-only.</p>
+                    <button class="btn btn-danger btn-sm w-100 fw-bold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-2"></i>Log Out (Keluar Admin)</button>
+                </div>
             </div>
 
             <!-- SHARE LINK PUBLIK VIA WA -->
@@ -408,7 +417,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.9">Versi 3.9 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 4.0">Versi 4.0 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -704,20 +713,19 @@
             const navPengaturan = document.getElementById('navItemPengaturan');
             if (navPengaturan) navPengaturan.style.display = 'block';
 
-            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger', 'adminSectionSecurity'].forEach(id => {
+            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger', 'adminSectionSecurity', 'adminSectionLogout'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.9 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.0 (Admin)";
             
-            // Mulai hitung mundur waktu tidak aktif
             resetInactivityTimer();
         }
 
         function enterPublicMode() {
             isAdminMode = false;
             localStorage.setItem('kas_isPublic', 'true');
-            clearTimeout(inactivityTimeout); // Hentikan timer auto logout
+            clearTimeout(inactivityTimeout);
 
             document.getElementById('fabAdd').style.display = 'none';
             document.getElementById('btnTambahSiswaContainer').style.display = 'none';
@@ -730,12 +738,20 @@
                 switchPage('beranda', document.getElementById('navItemBeranda'));
             }
 
-            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger', 'adminSectionSecurity'].forEach(id => {
+            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger', 'adminSectionSecurity', 'adminSectionLogout'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.9 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.0 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
+        }
+
+        // FUNGSI LOG OUT MANUAL ADMIN
+        function adminLogout() {
+            showConfirm("Konfirmasi Log Out", "Apakah Anda yakin ingin keluar dari mode Admin?", () => {
+                enterPublicMode();
+                showNotif("Berhasil Keluar", "Anda telah beralih ke Mode Publik (Read-Only).");
+            });
         }
 
         function triggerCamouflageAdmin() {
@@ -1335,7 +1351,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.9.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.0.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1406,10 +1422,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.9
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.0
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=3.9').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=4.0').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
