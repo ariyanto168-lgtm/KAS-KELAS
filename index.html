@@ -38,7 +38,7 @@
             background-color: var(--genz-bg); 
             color: #ffffff; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 75px; 
+            padding-top: 95px; 
             padding-bottom: 90px; 
             user-select: none; 
         }
@@ -85,7 +85,7 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 1020; 
         }
 
-        #installBanner { display: none; background: linear-gradient(135deg, #ffe066, #ff922b); color: #333; padding: 10px 15px; border-bottom: 1px solid #ffd43b; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 70px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold;}
+        #installBanner { display: none; background: linear-gradient(135deg, #ffe066, #ff922b); color: #333; padding: 10px 15px; border-bottom: 1px solid #ffd43b; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 85px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold;}
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -148,7 +148,6 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
             z-index: 1060;
         }
-        .app-logo-large { width: 90px; height: 90px; border-radius: 20px; object-fit: cover; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 2px solid var(--genz-pink); margin-bottom: 15px;}
     </style>
 </head>
 <body>
@@ -161,7 +160,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v4.0 • Powered By Ari GPM</small>
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v4.2 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -271,10 +270,8 @@
         <!-- HALAMAN PENGATURAN -->
         <div id="page-pengaturan" class="page-section">
             <div class="text-center mb-3 mt-1">
-                <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
-                <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v4.0 Gen Z</span>
+                <span class="badge bg-danger mt-1">v4.2 Gen Z</span>
             </div>
 
             <!-- TOMBOL LOGOUT / KELUAR ADMIN (Hanya Admin) -->
@@ -417,7 +414,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 4.0">Versi 4.0 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 4.2">Versi 4.2 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -717,7 +714,7 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.0 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.2 (Admin)";
             
             resetInactivityTimer();
         }
@@ -742,7 +739,7 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.0 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 4.2 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
@@ -1351,7 +1348,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.0.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v4.2.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1422,10 +1419,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.0
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v4.2
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=4.0').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=4.2').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
