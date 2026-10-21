@@ -69,8 +69,8 @@
             box-shadow: 0 -4px 20px rgba(0,0,0,0.5); 
             z-index: 1030;
         }
-        .nav-item-bottom { flex: 1; text-align: center; padding: 10px 0; color: #a0aec0; cursor: pointer; text-decoration: none; font-size: 12px; }
-        .nav-item-bottom i { font-size: 20px; display: block; margin-bottom: 3px; }
+        .nav-item-bottom { flex: 1; text-align: center; padding: 10px 0; color: #a0aec0; cursor: pointer; text-decoration: none; font-size: 11px; }
+        .nav-item-bottom i { font-size: 18px; display: block; margin-bottom: 2px; }
         .nav-item-bottom.active { color: var(--genz-pink); font-weight: bold; text-shadow: 0 0 10px rgba(255, 42, 133, 0.8); }
 
         .page-section { display: none; animation: fadeIn 0.2s; }
@@ -231,6 +231,9 @@
                     <button class="nav-link text-white active" id="tab-transaksi" onclick="switchDataTab('transaksi')">Buku Kas</button>
                 </li>
                 <li class="nav-item">
+                    <button class="nav-link text-white" id="tab-rekap" onclick="switchDataTab('rekap')">Rekap Iuran</button>
+                </li>
+                <li class="nav-item">
                     <button class="nav-link text-white" id="tab-siswa" onclick="switchDataTab('siswa')">Data Siswa</button>
                 </li>
             </ul>
@@ -242,6 +245,17 @@
                     <input type="text" id="searchTransaksi" class="form-control border-0 bg-transparent text-white" placeholder="Cari keterangan / nama..." onkeyup="renderBukuKas()">
                 </div>
                 <div id="listBukuKas"></div>
+            </div>
+
+            <!-- Sub-tab Rekap Status Iuran Siswa -->
+            <div id="sub-rekap" style="display: none;">
+                <div class="mb-3">
+                    <label class="form-label small text-white-50">Pilih Kategori untuk Dilihat Rekapnya:</label>
+                    <select class="form-select form-select-sm" id="selectRekapKategori" onchange="renderRekapIuran()">
+                        <!-- Dirender dinamis lewat JS -->
+                    </select>
+                </div>
+                <div id="listRekapIuran"></div>
             </div>
 
             <!-- Sub-tab Siswa -->
@@ -257,7 +271,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v2.5 Gen Z</span>
+                <span class="badge bg-danger mt-1">v2.6 Gen Z</span>
             </div>
 
             <!-- PENGATURAN TEMA -->
@@ -346,7 +360,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold">Versi 2.5</p>
+                <p class="text-white-50 small mb-1 fw-bold">Versi 2.6</p>
                 <p class="text-info small fw-bold" style="letter-spacing: 1px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -520,7 +534,6 @@
             localStorage.setItem('kas_theme', themeName);
         }
 
-        // --- DEKLARASI MODAL BOOTSTRAP ---
         let modalPinAuth, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -535,7 +548,11 @@
             modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
             modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
 
-            modalPinAuth.show();
+            // Cek apakah sudah pernah login sebelumnya di perangkat ini (Anti-Logout saat refresh)
+            const isLogged = localStorage.getItem('kas_isLoggedIn');
+            if (isLogged !== 'true') {
+                modalPinAuth.show();
+            }
         });
 
         function getCategories() {
@@ -549,6 +566,7 @@
                 if(el) el.value = cats[i] || '';
             }
             populateCategorySelect();
+            populateRekapCategorySelect();
         }
 
         function saveCategories() {
@@ -571,6 +589,18 @@
             cats.forEach(c => {
                 select.innerHTML += `<option value="${c}">${c}</option>`;
             });
+        }
+
+        function populateRekapCategorySelect() {
+            const select = document.getElementById('selectRekapKategori');
+            const cats = getCategories();
+            if(!select) return;
+            const currentVal = select.value;
+            select.innerHTML = '';
+            cats.forEach(c => {
+                select.innerHTML += `<option value="${c}">${c}</option>`;
+            });
+            if(cats.includes(currentVal)) select.value = currentVal;
         }
 
         function loadSchoolInfoToUI() {
@@ -599,6 +629,7 @@
             const savedPin = localStorage.getItem('kas_pin');
             pinInput.value = '';
             if (enteredPin === savedPin) {
+                localStorage.setItem('kas_isLoggedIn', 'true'); // Simpan status login di localStorage
                 modalPinAuth.hide();
             } else {
                 showNotif("Gagal", "PIN salah!");
@@ -669,20 +700,25 @@
             document.querySelectorAll('.nav-item-bottom').forEach(el => el.classList.remove('active'));
             element.classList.add('active');
             if(pageId === 'beranda') renderBeranda();
-            if(pageId === 'data') { renderBukuKas(); renderSiswa(); }
+            if(pageId === 'data') { renderBukuKas(); populateRekapCategorySelect(); renderRekapIuran(); renderSiswa(); }
         }
 
         function switchDataTab(tab) {
             document.getElementById('sub-transaksi').style.display = tab === 'transaksi' ? 'block' : 'none';
+            document.getElementById('sub-rekap').style.display = tab === 'rekap' ? 'block' : 'none';
             document.getElementById('sub-siswa').style.display = tab === 'siswa' ? 'block' : 'none';
+
             document.getElementById('tab-transaksi').classList.toggle('active', tab === 'transaksi');
+            document.getElementById('tab-rekap').classList.toggle('active', tab === 'rekap');
             document.getElementById('tab-siswa').classList.toggle('active', tab === 'siswa');
+
+            if(tab === 'rekap') renderRekapIuran();
         }
 
         function saveToLocal() {
             localStorage.setItem('kas_transactions', JSON.stringify(kasData.transactions));
             localStorage.setItem('kas_students', JSON.stringify(kasData.students));
-            renderBeranda(); renderBukuKas(); renderSiswa(); populateSiswaDatalist();
+            renderBeranda(); renderBukuKas(); renderRekapIuran(); renderSiswa(); populateSiswaDatalist();
         }
 
         // SISWA
@@ -730,6 +766,56 @@
             kasData.students.forEach(s => {
                 datalist.innerHTML += `<option value="${s.name}">`;
             });
+        }
+
+        // REKAP STATUS IURAN SISWA
+        function renderRekapIuran() {
+            const container = document.getElementById('listRekapIuran');
+            const selectedCat = document.getElementById('selectRekapKategori').value || getCategories()[0];
+            
+            if (kasData.students.length === 0) {
+                container.innerHTML = `<div class="text-center text-white-50 small py-4">Belum ada data siswa terdaftar. Tambahkan siswa terlebih dahulu di menu Data Siswa.</div>`;
+                return;
+            }
+
+            let html = '<div class="list-group">';
+            kasData.students.forEach(student => {
+                // Cari transaksi uang masuk untuk siswa ini pada kategori terpilih
+                const paidTx = kasData.transactions.filter(t => 
+                    t.type === 'masuk' && 
+                    (t.category === selectedCat || (!t.category && selectedCat === getCategories()[0])) &&
+                    t.student && t.student.toLowerCase() === student.name.toLowerCase()
+                );
+
+                if (paidTx.length > 0) {
+                    let totalBayar = paidTx.reduce((sum, t) => sum + t.amount, 0);
+                    html += `
+                        <div class="list-group-item py-2 border-success">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-white" style="font-size: 13px;"><i class="fa-solid fa-user-check text-success me-2"></i>${student.name}</h6>
+                                    <small class="text-success" style="font-size: 11px;">Sudah Membayar (${formatRp(totalBayar)})</small>
+                                </div>
+                                <span class="badge bg-success" style="font-size: 10px;">Lunas</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="list-group-item py-2 border-danger">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-white" style="font-size: 13px;"><i class="fa-solid fa-user-clock text-danger me-2"></i>${student.name}</h6>
+                                    <small class="text-danger" style="font-size: 11px;">Belum Membayar</small>
+                                </div>
+                                <span class="badge bg-danger" style="font-size: 10px;">Belum</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         // TRANSAKSI & KATEGORI DASHBOARD KARTU
@@ -870,7 +956,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.5.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.6.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
