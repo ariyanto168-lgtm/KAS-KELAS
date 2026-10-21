@@ -1,5 +1,5 @@
-// Nama cache diperbarui ke v1.2
-const CACHE_NAME = 'kas-kelas-pwa-v1.2';
+// Nama cache diperbarui ke v1.3 untuk memaksa browser update cache
+const CACHE_NAME = 'kas-kelas-pwa-v1.3';
 const urlsToCache = [
   './',
   './index.html',
@@ -10,7 +10,6 @@ const urlsToCache = [
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
-// Install SW & Simpan Cache
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -21,7 +20,6 @@ self.addEventListener('install', event => {
   self.skipWaiting();
 });
 
-// Fetch File: Ambil dari Cache jika Offline
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -31,7 +29,6 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Activate & Hapus Cache Lama (Untuk Update)
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(cacheNames => {
