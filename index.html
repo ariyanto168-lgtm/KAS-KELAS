@@ -160,7 +160,7 @@
                 <i class="fa-solid fa-wallet fallback-icon" id="navFallbackIcon"></i>
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
-                    <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
+                    <div style="font-size: 16px; font-weight: 800;">Kas Kelas <span id="badgeModePublik" class="badge bg-warning text-dark ms-1" style="font-size: 9px; display: none;">MODE PUBLIK</span></div>
                     <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;"></small>
                 </div>
             </span>
@@ -220,8 +220,8 @@
 
             <h6 class="mb-2 text-info fw-bold" style="font-size: 14px;"><i class="fa-solid fa-clock-rotate-left me-2"></i>Transaksi Terakhir</h6>
             <div id="listBeranda"></div>
-            <!-- FAB Tambah Transaksi -->
-            <button class="btn fab" onclick="openModalTransaksi()"><i class="fa-solid fa-plus fa-lg"></i></button>
+            <!-- FAB Tambah Transaksi (Hanya Admin) -->
+            <button class="btn fab" id="fabAdd" onclick="openModalTransaksi()"><i class="fa-solid fa-plus fa-lg"></i></button>
         </div>
 
         <!-- HALAMAN DATA -->
@@ -260,7 +260,7 @@
 
             <!-- Sub-tab Siswa -->
             <div id="sub-siswa" style="display: none;">
-                <button class="btn btn-info w-100 mb-3 fw-bold shadow" onclick="openModalSiswa()"><i class="fa-solid fa-user-plus me-2"></i>Tambah Siswa</button>
+                <button class="btn btn-info w-100 mb-3 fw-bold shadow" id="btnTambahSiswaContainer" onclick="openModalSiswa()"><i class="fa-solid fa-user-plus me-2"></i>Tambah Siswa</button>
                 <div id="listSiswa" class="list-group"></div>
             </div>
         </div>
@@ -271,7 +271,16 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v2.6 Gen Z</span>
+                <span class="badge bg-danger mt-1">v2.7 Gen Z</span>
+            </div>
+
+            <!-- SHARE LINK PUBLIK VIA WA -->
+            <div class="card card-custom mb-3 border-info">
+                <div class="card-body py-3 px-3 text-center">
+                    <h6 class="card-title text-info mb-2"><i class="fa-brands fa-whatsapp me-2"></i>Bagikan Info Transparansi Kas</h6>
+                    <p class="text-white-50 small mb-3">Kirim laporan saldo & rekap kas ke grup WhatsApp kelas secara publik.</p>
+                    <button class="btn btn-success btn-sm w-100 fw-bold" onclick="shareToWhatsApp()"><i class="fa-brands fa-whatsapp me-2"></i>Kirim Link Publik ke WhatsApp</button>
+                </div>
             </div>
 
             <!-- PENGATURAN TEMA -->
@@ -289,8 +298,8 @@
                 </div>
             </div>
 
-            <!-- EDIT NAMA KATEGORI IURAN -->
-            <div class="card card-custom mb-3">
+            <!-- EDIT NAMA KATEGORI IURAN (Hanya Admin) -->
+            <div class="card card-custom mb-3" id="adminSectionCategories">
                 <div class="card-body py-3 px-3">
                     <h6 class="card-title text-info mb-2"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Nama Kategori Iuran</h6>
                     <div class="mb-2">
@@ -313,8 +322,8 @@
                 </div>
             </div>
 
-            <!-- EDIT KELAS & ALAMAT -->
-            <div class="card card-custom mb-3">
+            <!-- EDIT KELAS & ALAMAT (Hanya Admin) -->
+            <div class="card card-custom mb-3" id="adminSectionSchool">
                 <div class="card-body py-3 px-3">
                     <h6 class="card-title text-info mb-2"><i class="fa-solid fa-school me-2"></i>Edit Informasi Kelas & Alamat</h6>
                     <div class="mb-2">
@@ -329,8 +338,8 @@
                 </div>
             </div>
 
-            <!-- GANTI PIN -->
-            <div class="card card-custom mb-3">
+            <!-- GANTI PIN (Hanya Admin) -->
+            <div class="card card-custom mb-3" id="adminSectionPin">
                 <div class="card-body py-3 px-3">
                     <h6 class="card-title text-warning mb-2"><i class="fa-solid fa-key me-2"></i>Keamanan (PIN)</h6>
                     <p class="text-white-50 small mb-2">Ubah PIN akses masuk aplikasi.</p>
@@ -338,8 +347,8 @@
                 </div>
             </div>
 
-            <!-- BACKUP & RESTORE -->
-            <div class="card card-custom mb-3">
+            <!-- BACKUP & RESTORE (Hanya Admin) -->
+            <div class="card card-custom mb-3" id="adminSectionBackup">
                 <div class="card-body py-3 px-3">
                     <h6 class="card-title text-success mb-2"><i class="fa-solid fa-database me-2"></i>Backup & Restore</h6>
                     <p class="text-white-50 small mb-3">Simpan data atau pulihkan dari file .json.</p>
@@ -351,7 +360,7 @@
                 </div>
             </div>
             
-            <div class="card card-custom mb-3 border-danger">
+            <div class="card card-custom mb-3 border-danger" id="adminSectionDanger">
                 <div class="card-body py-3 px-3">
                     <h6 class="card-title text-danger mb-2"><i class="fa-solid fa-triangle-exclamation me-2"></i>Zona Bahaya</h6>
                     <p class="text-white-50 small mb-3">Hapus seluruh data transaksi dan siswa secara permanen.</p>
@@ -360,7 +369,8 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold">Versi 2.6</p>
+                <!-- TOMBOL KAMUFLASE PADA NOMOR VERSI -->
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 2.7">Versi 2.7 (Publik)</p>
                 <p class="text-info small fw-bold" style="letter-spacing: 1px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -386,11 +396,12 @@
             <div class="modal-content p-3">
                 <div class="modal-body text-center p-3">
                     <img src="logo.png" style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover;" class="mb-3 shadow" onerror="this.style.display='none'">
-                    <h5 class="fw-bold mb-3 text-white">Masukkan PIN</h5>
+                    <h5 class="fw-bold mb-3 text-white">Masukkan PIN Admin</h5>
                     <div class="mb-3">
                         <input type="password" class="form-control text-center fw-bold fs-4" id="inputPinLogin" placeholder="PIN Akses..." autocomplete="current-password">
                     </div>
-                    <button class="btn btn-info w-100 fw-bold py-2" onclick="verifyPinLogin()">Masuk Aplikasi</button>
+                    <button class="btn btn-info w-100 fw-bold py-2 mb-2" onclick="verifyPinLogin()">Masuk Admin</button>
+                    <button class="btn btn-outline-light btn-sm w-100" onclick="enterPublicMode()">Lanjutkan Sebagai Publik (Read-Only)</button>
                 </div>
             </div>
         </div>
@@ -535,6 +546,7 @@
         }
 
         let modalPinAuth, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
+        let isAdminMode = false;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadSchoolInfoToUI();
@@ -548,12 +560,79 @@
             modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
             modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
 
-            // Cek apakah sudah pernah login sebelumnya di perangkat ini (Anti-Logout saat refresh)
-            const isLogged = localStorage.getItem('kas_isLoggedIn');
-            if (isLogged !== 'true') {
-                modalPinAuth.show();
+            // Cek URL parameter atau status tersimpan
+            const urlParams = new URLSearchParams(window.location.search);
+            const isPub = urlParams.get('mode') === 'publik' || localStorage.getItem('kas_isPublic') === 'true';
+
+            if (isPub) {
+                enterPublicMode();
+            } else {
+                const isLogged = localStorage.getItem('kas_isLoggedIn');
+                if (isLogged === 'true') {
+                    enterAdminMode();
+                } else {
+                    modalPinAuth.show();
+                }
             }
         });
+
+        function enterAdminMode() {
+            isAdminMode = true;
+            localStorage.setItem('kas_isLoggedIn', 'true');
+            localStorage.setItem('kas_isPublic', 'false');
+            document.getElementById('badgeModePublik').style.display = 'none';
+            document.getElementById('fabAdd').style.display = 'flex';
+            document.getElementById('btnTambahSiswaContainer').style.display = 'block';
+            
+            // Tampilkan menu admin di pengaturan
+            ['adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.style.display = 'block';
+            });
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 2.7 (Admin)";
+        }
+
+        function enterPublicMode() {
+            isAdminMode = false;
+            localStorage.setItem('kas_isPublic', 'true');
+            document.getElementById('badgeModePublik').style.display = 'inline-block';
+            document.getElementById('fabAdd').style.display = 'none';
+            document.getElementById('btnTambahSiswaContainer').style.display = 'none';
+
+            // Sembunyikan pengaturan sensitif admin
+            ['adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.style.display = 'none';
+            });
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 2.7 (Publik)";
+            if(modalPinAuth) modalPinAuth.hide();
+        }
+
+        function triggerCamouflageAdmin() {
+            // Tombol kamuflase pada nomor versi untuk memanggil kembali login admin
+            modalPinAuth.show();
+        }
+
+        function shareToWhatsApp() {
+            let masuk = 0, keluar = 0;
+            kasData.transactions.forEach(t => {
+                if (t.type === 'masuk') masuk += t.amount;
+                else keluar += t.amount;
+            });
+            const saldoAkhir = masuk - keluar;
+            const cName = localStorage.getItem('kas_className');
+            const pubUrl = window.location.href.split('?')[0] + '?mode=publik';
+
+            let text = `📊 *TRANSPARANSI KAS KELAS* 📊\n`;
+            text += `🏫 Kelas: *${cName}*\n\n`;
+            text += `💰 Total Saldo: *${formatRp(saldoAkhir)}*\n`;
+            text += `📥 Total Pemasukan: ${formatRp(masuk)}\n`;
+            text += `📤 Total Pengeluaran: ${formatRp(keluar)}\n\n`;
+            text += `🔍 Cek riwayat & rekap iuran lengkap secara real-time di sini:\n${pubUrl}\n\n_Catatan Kas Kelas Gen Z_`;
+
+            const encoded = encodeURIComponent(text);
+            window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
+        }
 
         function getCategories() {
             return JSON.parse(localStorage.getItem('kas_categories')) || ['Kas Mingguan', 'Uang Ujian', 'Dana Sosial', 'Lainnya'];
@@ -570,6 +649,7 @@
         }
 
         function saveCategories() {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             let newCats = [];
             for(let i=0; i<4; i++) {
                 let val = document.getElementById('editCat' + i).value.trim();
@@ -609,11 +689,14 @@
             document.getElementById('headerClassName').innerText = cName;
             document.getElementById('displayClassName').innerText = cName;
             document.getElementById('displaySchoolAddress').innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${cAddress}`;
-            document.getElementById('editClassName').value = cName;
-            document.getElementById('editSchoolAddress').value = cAddress;
+            const editC = document.getElementById('editClassName');
+            const editA = document.getElementById('editSchoolAddress');
+            if(editC) editC.value = cName;
+            if(editA) editA.value = cAddress;
         }
 
         function saveSchoolInfo() {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             const cName = document.getElementById('editClassName').value.trim();
             const cAddress = document.getElementById('editSchoolAddress').value.trim();
             if (!cName || !cAddress) return showNotif("Error", "Nama kelas dan alamat tidak boleh kosong!");
@@ -629,8 +712,9 @@
             const savedPin = localStorage.getItem('kas_pin');
             pinInput.value = '';
             if (enteredPin === savedPin) {
-                localStorage.setItem('kas_isLoggedIn', 'true'); // Simpan status login di localStorage
+                enterAdminMode();
                 modalPinAuth.hide();
+                showNotif("Sukses", "Berhasil masuk sebagai Admin.");
             } else {
                 showNotif("Gagal", "PIN salah!");
             }
@@ -723,11 +807,13 @@
 
         // SISWA
         function openModalSiswa() {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             document.getElementById('inputNamaSiswa').value = '';
             modalAddSiswa.show();
         }
 
         function saveSiswa() {
+            if(!isAdminMode) return;
             const nama = document.getElementById('inputNamaSiswa').value.trim();
             if (!nama) return showNotif("Error", "Nama siswa kosong!");
             kasData.students.push({ id: Date.now().toString(), name: nama });
@@ -737,6 +823,7 @@
         }
 
         function hapusSiswa(id) {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             showConfirm("Hapus Siswa", "Yakin menghapus siswa ini?", () => {
                 kasData.students = kasData.students.filter(s => s.id !== id);
                 saveToLocal();
@@ -751,10 +838,11 @@
                 return;
             }
             kasData.students.forEach(s => {
+                const btnHapus = isAdminMode ? `<button class="btn btn-sm text-danger p-0" onclick="hapusSiswa('${s.id}')"><i class="fa-solid fa-trash"></i></button>` : '';
                 list.innerHTML += `
                     <div class="list-group-item d-flex justify-content-between align-items-center py-2">
                         <span class="fw-bold text-white"><i class="fa-solid fa-user text-info me-2"></i>${s.name}</span>
-                        <button class="btn btn-sm text-danger p-0" onclick="hapusSiswa('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+                        ${btnHapus}
                     </div>
                 `;
             });
@@ -762,6 +850,7 @@
 
         function populateSiswaDatalist() {
             const datalist = document.getElementById('listDataSiswa');
+            if(!datalist) return;
             datalist.innerHTML = '';
             kasData.students.forEach(s => {
                 datalist.innerHTML += `<option value="${s.name}">`;
@@ -771,16 +860,17 @@
         // REKAP STATUS IURAN SISWA
         function renderRekapIuran() {
             const container = document.getElementById('listRekapIuran');
-            const selectedCat = document.getElementById('selectRekapKategori').value || getCategories()[0];
+            const selectEl = document.getElementById('selectRekapKategori');
+            if(!container || !selectEl) return;
+            const selectedCat = selectEl.value || getCategories()[0];
             
             if (kasData.students.length === 0) {
-                container.innerHTML = `<div class="text-center text-white-50 small py-4">Belum ada data siswa terdaftar. Tambahkan siswa terlebih dahulu di menu Data Siswa.</div>`;
+                container.innerHTML = `<div class="text-center text-white-50 small py-4">Belum ada data siswa terdaftar.</div>`;
                 return;
             }
 
             let html = '<div class="list-group">';
             kasData.students.forEach(student => {
-                // Cari transaksi uang masuk untuk siswa ini pada kategori terpilih
                 const paidTx = kasData.transactions.filter(t => 
                     t.type === 'masuk' && 
                     (t.category === selectedCat || (!t.category && selectedCat === getCategories()[0])) &&
@@ -820,6 +910,7 @@
 
         // TRANSAKSI & KATEGORI DASHBOARD KARTU
         function openModalTransaksi(defaultKategori = null) {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             document.getElementById('inputTanggal').valueAsDate = new Date();
             document.getElementById('inputNominal').value = '';
             document.getElementById('inputKeterangan').value = '';
@@ -832,6 +923,7 @@
         }
 
         function saveTransaksi() {
+            if(!isAdminMode) return;
             const jenis = document.getElementById('inputJenis').value;
             const kategori = document.getElementById('inputKategori').value;
             const tanggal = document.getElementById('inputTanggal').value;
@@ -852,6 +944,7 @@
         }
 
         function hapusTransaksi(id) {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             showConfirm("Hapus Transaksi", "Yakin menghapus transaksi ini?", () => {
                 kasData.transactions = kasData.transactions.filter(t => t.id !== id);
                 saveToLocal();
@@ -860,6 +953,7 @@
 
         function renderCategoryCards() {
             const container = document.getElementById('categoryCardsContainer');
+            if(!container) return;
             const categories = getCategories();
             
             let html = '';
@@ -871,9 +965,12 @@
                     }
                 });
 
+                // Di mode publik, kartu bisa diklik untuk melihat rekap kategori tersebut
+                let clickAction = isAdminMode ? `openModalTransaksi('${cat}')` : `switchPage('data', document.querySelectorAll('.nav-item-bottom')[1]); document.getElementById('selectRekapKategori').value='${cat}'; renderRekapIuran();`;
+
                 html += `
                     <div class="col-6">
-                        <div class="card-category" onclick="openModalTransaksi('${cat}')">
+                        <div class="card-category" onclick="${clickAction}">
                             <small class="text-white-50 d-block mb-1" style="font-size: 11px;"><i class="fa-solid fa-folder-open me-1"></i>${cat}</small>
                             <span class="fw-bold text-info" style="font-size: 13px;">${formatRp(totalCat)}</span>
                         </div>
@@ -891,6 +988,7 @@
             const categories = getCategories();
             const catBadge = `<span class="badge bg-secondary mb-1" style="font-size: 9px;">${t.category || categories[0]}</span>`;
             const namaSiswa = t.student ? `<small class="d-block text-info" style="font-size: 11px;"><i class="fa-solid fa-user me-1"></i>${t.student}</small>` : '';
+            const btnHapus = isAdminMode ? `<button class="btn btn-sm text-danger p-0 mt-1" style="font-size: 11px;" onclick="hapusTransaksi('${t.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>` : '';
 
             return `
                 <div class="list-group-item py-2">
@@ -905,7 +1003,7 @@
                         </div>
                         <div class="text-end">
                             <span class="${color} fw-bold d-block" style="font-size: 13px;">${icon} ${sign} ${formatRp(t.amount)}</span>
-                            <button class="btn btn-sm text-danger p-0 mt-1" style="font-size: 11px;" onclick="hapusTransaksi('${t.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                            ${btnHapus}
                         </div>
                     </div>
                 </div>
@@ -950,13 +1048,14 @@
         }
 
         function exportData() {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             if(kasData.transactions.length === 0 && kasData.students.length === 0) {
                 return showNotif("Peringatan", "Tidak ada data untuk dibackup.");
             }
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.6.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v2.7.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -964,6 +1063,7 @@
         }
 
         function importData(event) {
+            if(!isAdminMode) return;
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -988,6 +1088,7 @@
         }
 
         function confirmResetData() {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
             showConfirm("Peringatan", "Semua data akan dihapus permanen?", () => {
                 kasData = { transactions: [], students: [] };
                 saveToLocal();
