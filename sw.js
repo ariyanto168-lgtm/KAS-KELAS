@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kas-kelas-v3.2';
+const CACHE_NAME = 'kas-kelas-v4.6';
 const urlsToCache = [
   './',
   './index.html',
