@@ -9,15 +9,9 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3135/3135679.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/192/3135/3135679.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "./Logokaskelas.jpg",
+      "sizes": "192x192 512x512",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     }
   ]
