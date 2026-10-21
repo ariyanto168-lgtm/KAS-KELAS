@@ -161,8 +161,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <!-- Teks Versi Sebagai Tombol Kamuflase Login Admin -->
-                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v3.5 • Powered By Ari GPM</small>
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v3.7 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -275,7 +274,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v3.5 Gen Z</span>
+                <span class="badge bg-danger mt-1">v3.7 Gen Z</span>
             </div>
 
             <!-- SHARE LINK PUBLIK VIA WA -->
@@ -284,6 +283,26 @@
                     <h6 class="card-title text-info mb-2"><i class="fa-brands fa-whatsapp me-2"></i>Bagikan Info Transparansi Kas</h6>
                     <p class="text-white-50 small mb-3">Kirim laporan saldo & rekap kas ke grup WhatsApp kelas secara publik.</p>
                     <button class="btn btn-success btn-sm w-100 fw-bold" onclick="shareToWhatsApp()"><i class="fa-brands fa-whatsapp me-2"></i>Kirim Link Publik ke WhatsApp</button>
+                </div>
+            </div>
+
+            <!-- PENGATURAN KEAMANAN PERTANYAAN PEMULIHAN (Hanya Admin) -->
+            <div class="card card-custom mb-3" id="adminSectionSecurity">
+                <div class="card-body py-3 px-3">
+                    <h6 class="card-title text-info mb-2"><i class="fa-solid fa-shield-halved me-2"></i>Pertanyaan Keamanan (Lupa PIN)</h6>
+                    <div class="mb-2">
+                        <label class="form-label small text-white-50">Pertanyaan Pemulihan</label>
+                        <select class="form-select form-select-sm" id="editSecQuestion">
+                            <option value="Siapa nama wali kelas / guru favorit Anda?">Siapa nama wali kelas / guru favorit Anda?</option>
+                            <option value="Apa nama sekolah pertama Anda?">Apa nama sekolah pertama Anda?</option>
+                            <option value="Apa kata kunci rahasia Anda?">Apa kata kunci rahasia Anda?</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-white-50">Jawaban Rahasia</label>
+                        <input type="text" class="form-control form-control-sm" id="editSecAnswer" placeholder="Jawaban pemulihan...">
+                    </div>
+                    <button class="btn btn-info btn-sm w-100 fw-bold" onclick="saveSecuritySettings()"><i class="fa-solid fa-floppy-disk me-2"></i>Simpan Pertanyaan Keamanan</button>
                 </div>
             </div>
 
@@ -389,7 +408,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.5">Versi 3.5 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.7">Versi 3.7 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -416,11 +435,38 @@
                 <div class="modal-body text-center p-3">
                     <img src="logo.png" style="width: 60px; height: 60px; border-radius: 12px; object-fit: cover;" class="mb-3 shadow" onerror="this.style.display='none'">
                     <h5 class="fw-bold mb-3 text-white">Masukkan PIN Admin</h5>
-                    <div class="mb-3">
+                    <div class="mb-2">
                         <input type="password" class="form-control text-center fw-bold fs-4" id="inputPinLogin" placeholder="PIN Akses..." autocomplete="current-password">
+                    </div>
+                    <div class="mb-3 text-end">
+                        <a href="javascript:void(0)" class="text-info small text-decoration-none" onclick="openModalLupaPin()"><i class="fa-solid fa-key me-1"></i>Lupa PIN?</a>
                     </div>
                     <button class="btn btn-info w-100 fw-bold py-2 mb-2" onclick="verifyPinLogin()">Masuk Admin</button>
                     <button class="btn btn-outline-light btn-sm w-100" id="btnPublicModeModal" onclick="enterPublicMode()">Lanjutkan Sebagai Publik (Read-Only)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LUPA PIN LOKAL (PEMULIHAN MANDIRI) -->
+    <div class="modal fade" id="modalLupaPin" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold"><i class="fa-solid fa-user-shield text-info me-2"></i>Pemulihan PIN Mandiri</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-white-50 small mb-2" id="labelSecQuestion">Jawab pertanyaan keamanan di bawah ini untuk mereset PIN Anda.</p>
+                    <div class="mb-3">
+                        <label class="form-label small text-info fw-bold" id="displaySecQuestion">Siapa nama wali kelas / guru favorit Anda?</label>
+                        <input type="text" class="form-control" id="inputResetAnswer" placeholder="Ketik jawaban rahasia...">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small">PIN Baru</label>
+                        <input type="password" class="form-control" id="inputResetNewPin" placeholder="Masukkan PIN baru...">
+                    </div>
+                    <button class="btn btn-info w-100 fw-bold" onclick="resetPinLocal()"><i class="fa-solid fa-check-circle me-2"></i>Reset PIN Sekarang</button>
                 </div>
             </div>
         </div>
@@ -550,6 +596,8 @@
     <script>
         function initLocalStorage() {
             if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
+            if (!localStorage.getItem('kas_secQuestion')) localStorage.setItem('kas_secQuestion', 'Siapa nama wali kelas / guru favorit Anda?');
+            if (!localStorage.getItem('kas_secAnswer')) localStorage.setItem('kas_secAnswer', 'Ari'); // Jawaban Bawaan Pertama
             if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
             if (!localStorage.getItem('kas_schoolAddress')) localStorage.setItem('kas_schoolAddress', 'SMA Negeri 1 Nusantara');
             if (!localStorage.getItem('kas_categories')) {
@@ -569,7 +617,7 @@
             localStorage.setItem('kas_theme', themeName);
         }
 
-        let modalPinAuth, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
+        let modalPinAuth, modalLupaPin, modalChangePin, modalNotif, modalConfirm, modalAddSiswa, modalAddTransaksi;
         let isAdminMode = false;
 
         let kasData = { transactions: [], students: [] };
@@ -584,6 +632,7 @@
             loadSchoolInfoToUI();
             loadPengurusToUI();
             loadCategoriesToUI();
+            loadSecuritySettingsToUI();
 
             const urlParams = new URLSearchParams(window.location.search);
             const isPub = urlParams.get('mode') === 'publik' || localStorage.getItem('kas_isPublic') === 'true';
@@ -606,6 +655,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             modalPinAuth = new bootstrap.Modal(document.getElementById('modalPinAuth'), { backdrop: 'static', keyboard: false });
+            modalLupaPin = new bootstrap.Modal(document.getElementById('modalLupaPin'));
             modalChangePin = new bootstrap.Modal(document.getElementById('modalChangePin'));
             modalNotif = new bootstrap.Modal(document.getElementById('modalNotif'));
             modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirm'));
@@ -626,11 +676,11 @@
             const navPengaturan = document.getElementById('navItemPengaturan');
             if (navPengaturan) navPengaturan.style.display = 'block';
 
-            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger'].forEach(id => {
+            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger', 'adminSectionSecurity'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.5 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.7 (Admin)";
         }
 
         function enterPublicMode() {
@@ -647,18 +697,66 @@
                 switchPage('beranda', document.getElementById('navItemBeranda'));
             }
 
-            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger'].forEach(id => {
+            ['adminSectionPengurus', 'adminSectionCategories', 'adminSectionSchool', 'adminSectionPin', 'adminSectionBackup', 'adminSectionDanger', 'adminSectionSecurity'].forEach(id => {
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.5 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.7 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
-        // TRIGGER KAMUFLASE LOGIN RAHASIA SAMA UNTUK HEADER & FOOTER
         function triggerCamouflageAdmin() {
             document.getElementById('btnPublicModeModal').style.display = 'none';
             modalPinAuth.show();
+        }
+
+        // PENGATURAN PERTANYAAN KEAMANAN LOKAL
+        function loadSecuritySettingsToUI() {
+            const q = localStorage.getItem('kas_secQuestion') || 'Siapa nama wali kelas / guru favorit Anda?';
+            const a = localStorage.getItem('kas_secAnswer') || 'Ari';
+            
+            const editQ = document.getElementById('editSecQuestion');
+            const editA = document.getElementById('editSecAnswer');
+            if(editQ) editQ.value = q;
+            if(editA) editA.value = a;
+        }
+
+        function saveSecuritySettings() {
+            if(!isAdminMode) return showNotif("Akses Ditolak", "Fitur khusus admin!");
+            const q = document.getElementById('editSecQuestion').value;
+            const a = document.getElementById('editSecAnswer').value.trim();
+            if(!a) return showNotif("Error", "Jawaban rahasia tidak boleh kosong!");
+            
+            localStorage.setItem('kas_secQuestion', q);
+            localStorage.setItem('kas_secAnswer', a);
+            showNotif("Sukses", "Pertanyaan & jawaban pemulihan disimpan.");
+        }
+
+        function openModalLupaPin() {
+            modalPinAuth.hide();
+            const q = localStorage.getItem('kas_secQuestion') || 'Siapa nama wali kelas / guru favorit Anda?';
+            document.getElementById('displaySecQuestion').innerText = q;
+            document.getElementById('inputResetAnswer').value = '';
+            document.getElementById('inputResetNewPin').value = '';
+            modalLupaPin.show();
+        }
+
+        function resetPinLocal() {
+            const enteredAns = document.getElementById('inputResetAnswer').value.trim().toLowerCase();
+            const newPin = document.getElementById('inputResetNewPin').value.trim();
+            const savedAns = (localStorage.getItem('kas_secAnswer') || 'Ari').trim().toLowerCase();
+
+            if(!enteredAns) return showNotif("Error", "Masukkan jawaban rahasia!");
+            if(!newPin || newPin.length < 4) return showNotif("Error", "PIN baru minimal 4 karakter!");
+
+            if(enteredAns === savedAns) {
+                localStorage.setItem('kas_pin', newPin);
+                modalLupaPin.hide();
+                showNotif("Sukses", "PIN berhasil direset! Silakan masuk sebagai Admin.");
+                enterAdminMode();
+            } else {
+                showNotif("Gagal", "Jawaban rahasia Anda salah!");
+            }
         }
 
         function getPengurus() {
@@ -1204,7 +1302,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.5.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.7.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1275,10 +1373,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.5
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.7
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=3.5').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=3.7').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
