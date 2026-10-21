@@ -1,11 +1,11 @@
 {
-  "name": "Catatan Kas Kelas v1.5",
+  "name": "Catatan Kas Kelas v1.7",
   "short_name": "Kas Kelas",
-  "description": "Aplikasi pencatatan uang kas masuk dan keluar berbasis offline lokal.",
+  "description": "Aplikasi pencatatan uang kas masuk dan keluar berbasis offline lokal dengan tema Gen Z Glow.",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#f8f9fa",
-  "theme_color": "#0d6efd",
+  "background_color": "#0b091a",
+  "theme_color": "#ff2a85",
   "orientation": "portrait",
   "icons": [
     {
