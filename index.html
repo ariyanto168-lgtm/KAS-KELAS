@@ -161,7 +161,7 @@
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
                     <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
-                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v3.7 • Powered By Ari GPM</small>
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v3.9 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -274,7 +274,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v3.7 Gen Z</span>
+                <span class="badge bg-danger mt-1">v3.9 Gen Z</span>
             </div>
 
             <!-- SHARE LINK PUBLIK VIA WA -->
@@ -408,7 +408,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.7">Versi 3.7 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.9">Versi 3.9 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -594,10 +594,38 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // FITUR ANTI REFRESH (Peringatan Sebelum Page Reload / Konfirmasi Keluar)
+        window.addEventListener('beforeunload', (e) => {
+            if (isAdminMode) {
+                e.preventDefault();
+                e.returnValue = ''; 
+            }
+        });
+
+        // FITUR AUTO LOGOUT / INACTIVITY TIMER (5 Menit)
+        let inactivityTimeout;
+        const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 Menit dalam milidetik
+
+        function resetInactivityTimer() {
+            if (!isAdminMode) return;
+            clearTimeout(inactivityTimeout);
+            inactivityTimeout = setTimeout(() => {
+                if (isAdminMode) {
+                    enterPublicMode();
+                    showNotif("Sesi Berakhir", "Admin otomatis logout karena tidak ada aktivitas selama 5 menit.");
+                }
+            }, INACTIVITY_LIMIT);
+        }
+
+        // Pantau aktivitas sentuhan, klik, ketikan, atau scroll
+        ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
+            window.addEventListener(evt, resetInactivityTimer, true);
+        });
+
         function initLocalStorage() {
             if (!localStorage.getItem('kas_pin')) localStorage.setItem('kas_pin', 'Ud_778899');
             if (!localStorage.getItem('kas_secQuestion')) localStorage.setItem('kas_secQuestion', 'Siapa nama wali kelas / guru favorit Anda?');
-            if (!localStorage.getItem('kas_secAnswer')) localStorage.setItem('kas_secAnswer', 'Ari'); // Jawaban Bawaan Pertama
+            if (!localStorage.getItem('kas_secAnswer')) localStorage.setItem('kas_secAnswer', 'Ari');
             if (!localStorage.getItem('kas_className')) localStorage.setItem('kas_className', 'Kelas XII IPA 1');
             if (!localStorage.getItem('kas_schoolAddress')) localStorage.setItem('kas_schoolAddress', 'SMA Negeri 1 Nusantara');
             if (!localStorage.getItem('kas_categories')) {
@@ -680,12 +708,17 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.7 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.9 (Admin)";
+            
+            // Mulai hitung mundur waktu tidak aktif
+            resetInactivityTimer();
         }
 
         function enterPublicMode() {
             isAdminMode = false;
             localStorage.setItem('kas_isPublic', 'true');
+            clearTimeout(inactivityTimeout); // Hentikan timer auto logout
+
             document.getElementById('fabAdd').style.display = 'none';
             document.getElementById('btnTambahSiswaContainer').style.display = 'none';
 
@@ -701,7 +734,7 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.7 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.9 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
@@ -1302,7 +1335,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.7.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.9.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1373,10 +1406,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.7
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.9
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=3.7').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=3.9').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
