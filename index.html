@@ -43,13 +43,14 @@
             user-select: none; 
         }
 
-        /* Top Navbar Proporsional & Rapi */
+        /* Top Navbar */
         .navbar-top { 
             background: linear-gradient(135deg, var(--genz-pink), var(--genz-purple)) !important;
             box-shadow: 0 2px 15px rgba(0,0,0,0.4); 
             border-bottom: 1px solid rgba(255,255,255,0.2);
             padding: 6px 12px;
             min-height: 58px;
+            z-index: 1030;
         }
         .navbar-brand img { 
             width: 42px; 
@@ -67,6 +68,7 @@
             backdrop-filter: blur(15px);
             border-top: 1px solid var(--genz-border);
             box-shadow: 0 -4px 20px rgba(0,0,0,0.5); 
+            z-index: 1030;
         }
         .nav-item-bottom { flex: 1; text-align: center; padding: 10px 0; color: #a0aec0; cursor: pointer; text-decoration: none; font-size: 12px; }
         .nav-item-bottom i { font-size: 20px; display: block; margin-bottom: 3px; }
@@ -81,14 +83,14 @@
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
             background: linear-gradient(135deg, var(--genz-pink), var(--genz-purple));
             border: none; color: white;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 1000; 
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 1020; 
         }
 
         #installBanner { display: none; background: linear-gradient(135deg, #ffe066, #ff922b); color: #333; padding: 8px 12px; border-bottom: 1px solid #ffd43b; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 58px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold; font-size: 13px;}
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cards & Layout Rapi Tanpa Tumpang Tindih */
+        /* Cards & Layout */
         .card-saldo {
             background: linear-gradient(135deg, var(--genz-purple), var(--genz-pink));
             color: #fff;
@@ -133,6 +135,7 @@
             border: 1px solid var(--genz-border);
             border-radius: 18px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            z-index: 1060;
         }
         .app-logo-large { width: 90px; height: 90px; border-radius: 20px; object-fit: cover; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 2px solid var(--genz-pink); margin-bottom: 10px;}
     </style>
@@ -238,7 +241,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 40px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h6 class="fw-bold mb-0">Catatan Kas Kelas</h6>
-                <span class="badge bg-danger mt-1" style="font-size: 10px;">v1.9 Gen Z</span>
+                <span class="badge bg-danger mt-1" style="font-size: 10px;">v2.1 Gen Z</span>
             </div>
 
             <!-- PENGATURAN TEMA -->
@@ -312,7 +315,7 @@
             </div>
             
             <div class="text-center mt-2 mb-1">
-                <p class="text-white-50 small mb-0 fw-bold" style="font-size: 11px;">Versi 1.9</p>
+                <p class="text-white-50 small mb-0 fw-bold" style="font-size: 11px;">Versi 2.1</p>
                 <p class="text-info small fw-bold" style="letter-spacing: 1px; font-size: 11px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -381,4 +384,3 @@
             <div class="modal-content text-center p-3">
                 <i class="fa-solid fa-bell text-info mb-2" style="font-size: 30px;"></i>
                 <h6 id="notifTitle" class="fw-bold">Pesan</h6>
-                <p id="notifMessag
