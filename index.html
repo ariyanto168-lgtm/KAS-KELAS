@@ -38,27 +38,28 @@
             background-color: var(--genz-bg); 
             color: #ffffff; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 75px; 
-            padding-bottom: 95px; 
+            padding-top: 65px; 
+            padding-bottom: 90px; 
             user-select: none; 
         }
 
-        /* Top Navbar */
+        /* Top Navbar Proporsional & Rapi */
         .navbar-top { 
             background: linear-gradient(135deg, var(--genz-pink), var(--genz-purple)) !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4); 
+            box-shadow: 0 2px 15px rgba(0,0,0,0.4); 
             border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding: 10px 15px;
+            padding: 6px 12px;
+            min-height: 58px;
         }
         .navbar-brand img { 
-            width: 52px; 
-            height: 52px; 
-            border-radius: 12px; 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 10px; 
             object-fit: cover; 
-            box-shadow: 0 0 12px rgba(255,255,255,0.6);
+            box-shadow: 0 0 10px rgba(255,255,255,0.6);
             border: 2px solid #fff;
         }
-        .fallback-icon { font-size: 32px; margin-right: 10px; display: none; color: white;}
+        .fallback-icon { font-size: 28px; margin-right: 8px; display: none; color: white;}
 
         /* Bottom Navigation */
         .bottom-nav { 
@@ -71,44 +72,45 @@
         .nav-item-bottom i { font-size: 20px; display: block; margin-bottom: 3px; }
         .nav-item-bottom.active { color: var(--genz-pink); font-weight: bold; text-shadow: 0 0 10px rgba(255, 42, 133, 0.8); }
 
-        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section { display: none; animation: fadeIn 0.2s; }
         .page-section.active { display: block; }
         
         /* FAB Button */
         .fab { 
-            position: fixed; bottom: 95px; right: 20px; width: 60px; height: 60px; 
+            position: fixed; bottom: 90px; right: 20px; width: 56px; height: 56px; 
             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
             background: linear-gradient(135deg, var(--genz-pink), var(--genz-purple));
             border: none; color: white;
             box-shadow: 0 6px 20px rgba(0,0,0,0.5); z-index: 1000; 
         }
 
-        #installBanner { display: none; background: linear-gradient(135deg, #ffe066, #ff922b); color: #333; padding: 10px 15px; border-bottom: 1px solid #ffd43b; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 72px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold;}
+        #installBanner { display: none; background: linear-gradient(135deg, #ffe066, #ff922b); color: #333; padding: 8px 12px; border-bottom: 1px solid #ffd43b; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 58px; width: 100%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-weight: bold; font-size: 13px;}
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cards & Layout */
+        /* Cards & Layout Rapi Tanpa Tumpang Tindih */
         .card-saldo {
             background: linear-gradient(135deg, var(--genz-purple), var(--genz-pink));
             color: #fff;
-            border-radius: 18px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
             border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 12px;
         }
         .card-custom {
             background: var(--genz-card);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--genz-border);
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             color: #fff;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .list-group-item { 
             background: rgba(255, 255, 255, 0.05) !important; 
             color: #ffffff !important;
-            border-radius: 14px !important; 
-            margin-bottom: 10px; 
+            border-radius: 12px !important; 
+            margin-bottom: 8px; 
             border: 1px solid var(--genz-border) !important; 
         }
         
@@ -118,23 +120,21 @@
             color: #ffffff !important;
             border-radius: 10px;
         }
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.5) !important;
-        }
+        .form-control::placeholder { color: rgba(255, 255, 255, 0.5) !important; }
         .form-control:focus, .form-select:focus {
             background: rgba(255, 255, 255, 0.12) !important;
             color: #ffffff !important;
             border-color: var(--genz-pink) !important;
-            box-shadow: 0 0 12px rgba(255, 42, 133, 0.4);
+            box-shadow: 0 0 10px rgba(255, 42, 133, 0.4);
         }
         .modal-content {
             background: #141028;
             color: #fff;
             border: 1px solid var(--genz-border);
-            border-radius: 20px;
+            border-radius: 18px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
-        .app-logo-large { width: 100px; height: 100px; border-radius: 22px; object-fit: cover; box-shadow: 0 0 20px rgba(0,0,0,0.5); border: 2px solid var(--genz-pink); margin-bottom: 12px;}
+        .app-logo-large { width: 90px; height: 90px; border-radius: 20px; object-fit: cover; box-shadow: 0 0 15px rgba(0,0,0,0.5); border: 2px solid var(--genz-pink); margin-bottom: 10px;}
     </style>
 </head>
 <body>
@@ -146,8 +146,8 @@
                 <i class="fa-solid fa-wallet fallback-icon" id="navFallbackIcon"></i>
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
-                    <div style="font-size: 17px; font-weight: 800;">Kas Kelas</div>
-                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;">Memuat Kelas...</small>
+                    <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
+                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;"></small>
                 </div>
             </span>
         </div>
@@ -155,10 +155,10 @@
 
     <!-- PWA Install Banner -->
     <div id="installBanner">
-        <span><i class="fa-solid fa-download me-2"></i>Instal Aplikasi Kas Kelas</span>
+        <span><i class="fa-solid fa-download me-2"></i>Instal Aplikasi</span>
         <div>
-            <button id="btnDismissInstall" class="btn btn-sm btn-dark me-1" onclick="dismissInstall()">Nanti</button>
-            <button id="btnInstall" class="btn btn-sm btn-dark fw-bold">Instal</button>
+            <button id="btnDismissInstall" class="btn btn-sm btn-dark me-1 py-0 px-2" onclick="dismissInstall()">Nanti</button>
+            <button id="btnInstall" class="btn btn-sm btn-dark fw-bold py-0 px-2">Instal</button>
         </div>
     </div>
 
@@ -168,12 +168,12 @@
         <!-- HALAMAN BERANDA -->
         <div id="page-beranda" class="page-section active">
             <!-- Header Info Kelas -->
-            <div class="card card-custom p-3 text-center">
-                <h5 id="displayClassName" class="fw-bold mb-1 text-info">--</h5>
-                <p id="displaySchoolAddress" class="text-white-50 small mb-0"><i class="fa-solid fa-location-dot me-1"></i>--</p>
+            <div class="card card-custom p-2 px-3 text-center mb-2">
+                <h6 id="displayClassName" class="fw-bold mb-1 text-info"></h6>
+                <p id="displaySchoolAddress" class="text-white-50 small mb-0" style="font-size: 12px;"><i class="fa-solid fa-location-dot me-1"></i></p>
             </div>
 
-            <div class="card card-saldo mb-3">
+            <div class="card card-saldo">
                 <div class="card-body text-center py-3">
                     <h6 class="card-title text-uppercase opacity-75" style="font-size: 11px; letter-spacing: 1px;">Total Saldo Kas</h6>
                     <h2 id="saldoTotal" class="fw-bold mb-0 display-6">Rp 0</h2>
@@ -184,7 +184,7 @@
                 <div class="col-6">
                     <div class="card card-custom border-success mb-0">
                         <div class="card-body p-2 text-center text-success">
-                            <small class="d-block"><i class="fa-solid fa-arrow-down me-1"></i>Pemasukan</small>
+                            <small class="d-block" style="font-size: 11px;"><i class="fa-solid fa-arrow-down me-1"></i>Pemasukan</small>
                             <span id="totalMasuk" class="fw-bold fs-6">Rp 0</span>
                         </div>
                     </div>
@@ -192,14 +192,14 @@
                 <div class="col-6">
                     <div class="card card-custom border-danger mb-0">
                         <div class="card-body p-2 text-center text-danger">
-                            <small class="d-block"><i class="fa-solid fa-arrow-up me-1"></i>Pengeluaran</small>
+                            <small class="d-block" style="font-size: 11px;"><i class="fa-solid fa-arrow-up me-1"></i>Pengeluaran</small>
                             <span id="totalKeluar" class="fw-bold fs-6">Rp 0</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <h6 class="mb-2 text-info fw-bold" style="font-size: 14px;"><i class="fa-solid fa-clock-rotate-left me-2"></i>Transaksi Terakhir</h6>
+            <h6 class="mb-2 text-info fw-bold" style="font-size: 13px;"><i class="fa-solid fa-clock-rotate-left me-2"></i>Transaksi Terakhir</h6>
             <div id="listBeranda"></div>
             <!-- FAB Tambah Transaksi -->
             <button class="btn fab" onclick="openModalTransaksi()"><i class="fa-solid fa-plus fa-lg"></i></button>
@@ -209,16 +209,16 @@
         <div id="page-data" class="page-section">
             <ul class="nav nav-pills nav-fill card-custom p-1 mb-3">
                 <li class="nav-item">
-                    <button class="nav-link text-white active" id="tab-transaksi" onclick="switchDataTab('transaksi')">Buku Kas</button>
+                    <button class="nav-link text-white active py-1" id="tab-transaksi" onclick="switchDataTab('transaksi')">Buku Kas</button>
                 </li>
                 <li class="nav-item">
-                    <button class="nav-link text-white" id="tab-siswa" onclick="switchDataTab('siswa')">Data Siswa</button>
+                    <button class="nav-link text-white py-1" id="tab-siswa" onclick="switchDataTab('siswa')">Data Siswa</button>
                 </li>
             </ul>
 
             <!-- Sub-tab Transaksi -->
             <div id="sub-transaksi">
-                <div class="input-group mb-3 card-custom p-1">
+                <div class="input-group mb-2 card-custom p-1">
                     <span class="input-group-text bg-transparent border-0 text-info"><i class="fa-solid fa-search"></i></span>
                     <input type="text" id="searchTransaksi" class="form-control border-0 bg-transparent text-white" placeholder="Cari keterangan / nama..." onkeyup="renderBukuKas()">
                 </div>
@@ -227,26 +227,26 @@
 
             <!-- Sub-tab Siswa -->
             <div id="sub-siswa" style="display: none;">
-                <button class="btn btn-info w-100 mb-3 fw-bold shadow" onclick="openModalSiswa()"><i class="fa-solid fa-user-plus me-2"></i>Tambah Siswa</button>
+                <button class="btn btn-info w-100 mb-3 fw-bold shadow btn-sm py-2" onclick="openModalSiswa()"><i class="fa-solid fa-user-plus me-2"></i>Tambah Siswa</button>
                 <div id="listSiswa" class="list-group"></div>
             </div>
         </div>
 
         <!-- HALAMAN PENGATURAN -->
         <div id="page-pengaturan" class="page-section">
-            <div class="text-center mb-3 mt-1">
-                <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 50px; display: none;" id="settingFallbackIcon"></i>
+            <div class="text-center mb-2 mt-1">
+                <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 40px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
-                <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v1.8 Gen Z</span>
+                <h6 class="fw-bold mb-0">Catatan Kas Kelas</h6>
+                <span class="badge bg-danger mt-1" style="font-size: 10px;">v1.9 Gen Z</span>
             </div>
 
             <!-- PENGATURAN TEMA -->
-            <div class="card card-custom mb-3">
+            <div class="card card-custom mb-2">
                 <div class="card-body py-2 px-3">
-                    <h6 class="card-title text-info mb-2" style="font-size: 14px;"><i class="fa-solid fa-palette me-2"></i>Pengaturan Tema</h6>
-                    <div class="mb-2">
-                        <label class="form-label small text-white-50">Pilih Warna Tema</label>
+                    <h6 class="card-title text-info mb-1" style="font-size: 13px;"><i class="fa-solid fa-palette me-2"></i>Pengaturan Tema</h6>
+                    <div class="mb-1">
+                        <label class="form-label small text-white-50 mb-1" style="font-size: 11px;">Pilih Warna Tema</label>
                         <select class="form-select form-select-sm" id="selectTheme" onchange="changeTheme(this.value)">
                             <option value="pink" class="bg-dark text-white">Neon Pink & Purple (Default)</option>
                             <option value="cyan" class="bg-dark text-white">Cyber Cyan & Blue</option>
@@ -257,63 +257,63 @@
             </div>
 
             <!-- EDIT KELAS & ALAMAT -->
-            <div class="card card-custom mb-3">
+            <div class="card card-custom mb-2">
                 <div class="card-body py-2 px-3">
-                    <h6 class="card-title text-info mb-2" style="font-size: 14px;"><i class="fa-solid fa-school me-2"></i>Edit Informasi Kelas & Alamat</h6>
-                    <div class="mb-2">
-                        <label class="form-label small text-white-50">Nama Kelas / Keterangan</label>
-                        <input type="text" class="form-control form-control-sm" id="editClassName" placeholder="Contoh: Kelas XII IPA 1">
+                    <h6 class="card-title text-info mb-1" style="font-size: 13px;"><i class="fa-solid fa-school me-2"></i>Edit Informasi Kelas & Alamat</h6>
+                    <div class="mb-1">
+                        <label class="form-label small text-white-50 mb-1" style="font-size: 11px;">Nama Kelas / Keterangan</label>
+                        <input type="text" class="form-control form-control-sm" id="editClassName" placeholder="Nama kelas...">
                     </div>
                     <div class="mb-2">
-                        <label class="form-label small text-white-50">Alamat Lengkap Sekolah</label>
+                        <label class="form-label small text-white-50 mb-1" style="font-size: 11px;">Alamat Lengkap Sekolah</label>
                         <textarea class="form-control form-control-sm" id="editSchoolAddress" rows="2" placeholder="Alamat lengkap..."></textarea>
                     </div>
-                    <button class="btn btn-info btn-sm w-100 fw-bold" onclick="saveSchoolInfo()"><i class="fa-solid fa-floppy-disk me-2"></i>Simpan Info Kelas</button>
+                    <button class="btn btn-info btn-sm w-100 fw-bold py-1" onclick="saveSchoolInfo()"><i class="fa-solid fa-floppy-disk me-2"></i>Simpan Info Kelas</button>
                 </div>
             </div>
 
             <!-- TOMBOL INSTAL MANUAL -->
-            <div class="card card-custom mb-3" id="cardInstallManual" style="display: none;">
+            <div class="card card-custom mb-2" id="cardInstallManual" style="display: none;">
                 <div class="card-body py-2 px-3">
-                    <h6 class="card-title text-warning mb-1" style="font-size: 14px;"><i class="fa-solid fa-mobile-screen-button me-2"></i>Instal Aplikasi</h6>
-                    <p class="text-white-50 small mb-2">Jadikan aplikasi utama di HP Anda.</p>
-                    <button class="btn btn-warning btn-sm w-100 fw-bold" id="btnInstallManual"><i class="fa-solid fa-download me-2"></i>Instal Sekarang</button>
+                    <h6 class="card-title text-warning mb-1" style="font-size: 13px;"><i class="fa-solid fa-mobile-screen-button me-2"></i>Instal Aplikasi</h6>
+                    <p class="text-white-50 small mb-2" style="font-size: 11px;">Jadikan aplikasi utama di HP Anda.</p>
+                    <button class="btn btn-warning btn-sm w-100 fw-bold py-1" id="btnInstallManual"><i class="fa-solid fa-download me-2"></i>Instal Sekarang</button>
                 </div>
             </div>
 
             <!-- GANTI PIN -->
-            <div class="card card-custom mb-3">
+            <div class="card card-custom mb-2">
                 <div class="card-body py-2 px-3">
-                    <h6 class="card-title text-warning mb-1" style="font-size: 14px;"><i class="fa-solid fa-key me-2"></i>Keamanan (PIN)</h6>
-                    <p class="text-white-50 small mb-2">Ubah PIN akses masuk aplikasi.</p>
-                    <button class="btn btn-outline-warning btn-sm w-100" onclick="openModalChangePin()"><i class="fa-solid fa-lock-open me-2"></i>Ganti PIN</button>
+                    <h6 class="card-title text-warning mb-1" style="font-size: 13px;"><i class="fa-solid fa-key me-2"></i>Keamanan (PIN)</h6>
+                    <p class="text-white-50 small mb-2" style="font-size: 11px;">Ubah PIN akses masuk aplikasi.</p>
+                    <button class="btn btn-outline-warning btn-sm w-100 py-1" onclick="openModalChangePin()"><i class="fa-solid fa-lock-open me-2"></i>Ganti PIN</button>
                 </div>
             </div>
 
             <!-- BACKUP & RESTORE -->
-            <div class="card card-custom mb-3">
+            <div class="card card-custom mb-2">
                 <div class="card-body py-2 px-3">
-                    <h6 class="card-title text-success mb-1" style="font-size: 14px;"><i class="fa-solid fa-database me-2"></i>Backup & Restore</h6>
-                    <p class="text-white-50 small mb-2">Simpan data atau pulihkan dari file .json.</p>
-                    <button class="btn btn-success btn-sm w-100 mb-2 fw-bold" onclick="exportData()"><i class="fa-solid fa-file-export me-2"></i>Backup Data (Export)</button>
-                    <label class="btn btn-outline-success btn-sm w-100 mb-0">
+                    <h6 class="card-title text-success mb-1" style="font-size: 13px;"><i class="fa-solid fa-database me-2"></i>Backup & Restore</h6>
+                    <p class="text-white-50 small mb-2" style="font-size: 11px;">Simpan data atau pulihkan dari file .json.</p>
+                    <button class="btn btn-success btn-sm w-100 mb-1 fw-bold py-1" onclick="exportData()"><i class="fa-solid fa-file-export me-2"></i>Backup Data (Export)</button>
+                    <label class="btn btn-outline-success btn-sm w-100 mb-0 py-1">
                         <i class="fa-solid fa-file-import me-2"></i>Restore Data (Import)
                         <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
                     </label>
                 </div>
             </div>
             
-            <div class="card card-custom mb-3 border-danger">
+            <div class="card card-custom mb-2 border-danger">
                 <div class="card-body py-2 px-3">
-                    <h6 class="card-title text-danger mb-1" style="font-size: 14px;"><i class="fa-solid fa-triangle-exclamation me-2"></i>Zona Bahaya</h6>
-                    <p class="text-white-50 small mb-2">Hapus seluruh data transaksi dan siswa.</p>
-                    <button class="btn btn-outline-danger btn-sm w-100" onclick="confirmResetData()"><i class="fa-solid fa-trash me-2"></i>Reset Semua Data</button>
+                    <h6 class="card-title text-danger mb-1" style="font-size: 13px;"><i class="fa-solid fa-triangle-exclamation me-2"></i>Zona Bahaya</h6>
+                    <p class="text-white-50 small mb-2" style="font-size: 11px;">Hapus seluruh data transaksi dan siswa.</p>
+                    <button class="btn btn-outline-danger btn-sm w-100 py-1" onclick="confirmResetData()"><i class="fa-solid fa-trash me-2"></i>Reset Semua Data</button>
                 </div>
             </div>
             
-            <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold">Versi 1.8</p>
-                <p class="text-info small fw-bold" style="letter-spacing: 1px;">Powered By Ari GPM</p>
+            <div class="text-center mt-2 mb-1">
+                <p class="text-white-50 small mb-0 fw-bold" style="font-size: 11px;">Versi 1.9</p>
+                <p class="text-info small fw-bold" style="letter-spacing: 1px; font-size: 11px;">Powered By Ari GPM</p>
             </div>
         </div>
 
@@ -332,12 +332,12 @@
         </a>
     </nav>
 
-    <!-- MODAL: PIN AUTENTIKASI MASUK (Dibersihkan tanpa teks info / default PIN) -->
+    <!-- MODAL: PIN AUTENTIKASI MASUK -->
     <div class="modal fade" id="modalPinAuth" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content p-3">
                 <div class="modal-body text-center p-3">
-                    <img src="logo.png" style="width: 65px; height: 65px; border-radius: 14px; object-fit: cover;" class="mb-3 shadow" onerror="this.style.display='none'">
+                    <img src="logo.png" style="width: 55px; height: 55px; border-radius: 12px; object-fit: cover;" class="mb-3 shadow" onerror="this.style.display='none'">
                     <h5 class="fw-bold mb-3 text-white">Masukkan PIN</h5>
                     <div class="mb-3">
                         <input type="password" class="form-control text-center fw-bold fs-4" id="inputPinLogin" placeholder="PIN Akses..." autocomplete="current-password">
@@ -352,18 +352,18 @@
     <div class="modal fade" id="modalChangePin" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header border-0">
+                <div class="modal-header border-0 pb-0">
                     <h6 class="modal-title fw-bold">Ganti PIN Keamanan</h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-2">
                         <label class="form-label small">PIN Lama</label>
-                        <input type="password" class="form-control" id="inputOldPin" placeholder="Masukkan PIN lama...">
+                        <input type="password" class="form-control" id="inputOldPin" placeholder="PIN lama...">
                     </div>
                     <div class="mb-2">
                         <label class="form-label small">PIN Baru</label>
-                        <input type="password" class="form-control" id="inputNewPin" placeholder="Masukkan PIN baru...">
+                        <input type="password" class="form-control" id="inputNewPin" placeholder="PIN baru...">
                     </div>
                     <div class="mb-3">
                         <label class="form-label small">Konfirmasi PIN Baru</label>
@@ -378,16 +378,7 @@
     <!-- MODAL NOTIFIKASI -->
     <div class="modal fade" id="modalNotif" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
-            <div class="modal-content text-center p-4">
-                <i class="fa-solid fa-bell text-info mb-3" style="font-size: 35px;"></i>
+            <div class="modal-content text-center p-3">
+                <i class="fa-solid fa-bell text-info mb-2" style="font-size: 30px;"></i>
                 <h6 id="notifTitle" class="fw-bold">Pesan</h6>
-                <p id="notifMessage" class="text-white-50 small mb-3">Isi pesan disini.</p>
-                <button type="button" class="btn btn-info btn-sm w-100 fw-bold" data-bs-dismiss="modal">Mengerti</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL KONFIRMASI -->
-    <div class="modal fade" id="modalConfirm" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
-      
+                <p id="notifMessag
