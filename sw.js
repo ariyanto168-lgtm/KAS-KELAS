@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kas-kelas-pwa-v1.9';
+const CACHE_NAME = 'kas-kelas-pwa-v2.1';
 const urlsToCache = [
   'index.html',
   'manifest.json',
