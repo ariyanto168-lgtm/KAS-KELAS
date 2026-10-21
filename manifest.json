@@ -1,5 +1,5 @@
 {
-  "name": "Catatan Kas Kelas",
+  "name": "Catatan Kas Kelas v1.2",
   "short_name": "Kas Kelas",
   "description": "Aplikasi pencatatan uang kas masuk dan keluar berbasis offline lokal.",
   "start_url": "./index.html",
