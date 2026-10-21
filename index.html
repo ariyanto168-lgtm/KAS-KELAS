@@ -160,8 +160,9 @@
                 <i class="fa-solid fa-wallet fallback-icon" id="navFallbackIcon"></i>
                 <img src="logo.png" id="navLogo" alt="Logo" onerror="handleImageError('navLogo', 'navFallbackIcon')"> 
                 <div class="ms-2 lh-sm">
-                    <div style="font-size: 16px; font-weight: 800;">Kas Kelas <span id="badgeModePublik" class="badge bg-warning text-dark ms-1" style="font-size: 9px; display: none;">MODE PUBLIK</span></div>
-                    <small id="headerClassName" style="font-size: 11px; opacity: 0.9; display: block; font-weight: normal;">Kelas XII IPA 1</small>
+                    <div style="font-size: 16px; font-weight: 800;">Kas Kelas</div>
+                    <!-- Teks Versi Sebagai Tombol Kamuflase Login Admin -->
+                    <small style="font-size: 10px; opacity: 0.9; display: block; font-weight: 500; cursor: pointer;" onclick="triggerCamouflageAdmin()">v3.5 • Powered By Ari GPM</small>
                 </div>
             </span>
         </div>
@@ -274,7 +275,7 @@
                 <i class="fa-solid fa-wallet text-pink mb-2" style="font-size: 45px; display: none;" id="settingFallbackIcon"></i>
                 <img src="logo.png" id="settingLogo" alt="Logo Kas Kelas" class="app-logo-large" onerror="handleImageError('settingLogo', 'settingFallbackIcon')">
                 <h5 class="fw-bold mb-0">Catatan Kas Kelas</h5>
-                <span class="badge bg-danger mt-1">v3.3 Gen Z</span>
+                <span class="badge bg-danger mt-1">v3.5 Gen Z</span>
             </div>
 
             <!-- SHARE LINK PUBLIK VIA WA -->
@@ -388,7 +389,7 @@
             </div>
             
             <div class="text-center mt-3 mb-2">
-                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.3">Versi 3.3 (Publik)</p>
+                <p class="text-white-50 small mb-1 fw-bold" id="camouflageVersionBtn" style="cursor: pointer;" onclick="triggerCamouflageAdmin()" title="Versi 3.5">Versi 3.5 (Publik)</p>
                 <p class="text-info" style="font-size: 10px; opacity: 0.7; letter-spacing: 0.5px;">Powered By Ari GPM</p>
             </div>
         </div>
@@ -419,7 +420,6 @@
                         <input type="password" class="form-control text-center fw-bold fs-4" id="inputPinLogin" placeholder="PIN Akses..." autocomplete="current-password">
                     </div>
                     <button class="btn btn-info w-100 fw-bold py-2 mb-2" onclick="verifyPinLogin()">Masuk Admin</button>
-                    <!-- Tombol Mode Publik disembunyikan saat login admin -->
                     <button class="btn btn-outline-light btn-sm w-100" id="btnPublicModeModal" onclick="enterPublicMode()">Lanjutkan Sebagai Publik (Read-Only)</button>
                 </div>
             </div>
@@ -620,11 +620,9 @@
             isAdminMode = true;
             localStorage.setItem('kas_isLoggedIn', 'true');
             localStorage.setItem('kas_isPublic', 'false');
-            document.getElementById('badgeModePublik').style.display = 'none';
             document.getElementById('fabAdd').style.display = 'flex';
             document.getElementById('btnTambahSiswaContainer').style.display = 'block';
             
-            // Tampilkan icon Pengaturan di bottom nav untuk Admin
             const navPengaturan = document.getElementById('navItemPengaturan');
             if (navPengaturan) navPengaturan.style.display = 'block';
 
@@ -632,21 +630,18 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'block';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.3 (Admin)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.5 (Admin)";
         }
 
         function enterPublicMode() {
             isAdminMode = false;
             localStorage.setItem('kas_isPublic', 'true');
-            document.getElementById('badgeModePublik').style.display = 'inline-block';
             document.getElementById('fabAdd').style.display = 'none';
             document.getElementById('btnTambahSiswaContainer').style.display = 'none';
 
-            // Sembunyikan icon Pengaturan di bottom nav untuk Publik
             const navPengaturan = document.getElementById('navItemPengaturan');
             if (navPengaturan) navPengaturan.style.display = 'none';
 
-            // Jika sedang di halaman pengaturan, alihkan ke beranda
             const activePage = document.querySelector('.page-section.active');
             if (activePage && activePage.id === 'page-pengaturan') {
                 switchPage('beranda', document.getElementById('navItemBeranda'));
@@ -656,12 +651,12 @@
                 const el = document.getElementById(id);
                 if(el) el.style.display = 'none';
             });
-            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.3 (Publik)";
+            document.getElementById('camouflageVersionBtn').innerText = "Versi 3.5 (Publik)";
             if(modalPinAuth) modalPinAuth.hide();
         }
 
+        // TRIGGER KAMUFLASE LOGIN RAHASIA SAMA UNTUK HEADER & FOOTER
         function triggerCamouflageAdmin() {
-            // Sembunyikan tombol Mode Publik saat membuka login PIN Admin
             document.getElementById('btnPublicModeModal').style.display = 'none';
             modalPinAuth.show();
         }
@@ -778,9 +773,11 @@
             const cName = localStorage.getItem('kas_className') || 'Kelas XII IPA 1';
             const cAddress = localStorage.getItem('kas_schoolAddress') || 'SMA Negeri 1 Nusantara';
             
-            document.getElementById('headerClassName').innerText = cName;
-            document.getElementById('displayClassName').innerText = cName;
-            document.getElementById('displaySchoolAddress').innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${cAddress}`;
+            const dispC = document.getElementById('displayClassName');
+            if(dispC) dispC.innerText = cName;
+            
+            const dispA = document.getElementById('displaySchoolAddress');
+            if(dispA) dispA.innerHTML = `<i class="fa-solid fa-location-dot me-1"></i>${cAddress}`;
             
             const editC = document.getElementById('editClassName');
             const editA = document.getElementById('editSchoolAddress');
@@ -1088,7 +1085,6 @@
             }
         }
 
-        // KOREKSI PERHITUNGAN KARTU KATEGORI (BERSIH: MASUK - KELUAR)
         function renderCategoryCards() {
             const container = document.getElementById('categoryCardsContainer');
             if(!container) return;
@@ -1157,7 +1153,6 @@
             `;
         }
 
-        // KOREKSI TOTAL SALDO, PEMASUKAN, PENGELUARAN
         function renderBeranda() {
             loadSchoolInfoToUI();
             loadPengurusToUI();
@@ -1209,7 +1204,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.3.json");
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas_v3.5.json");
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
@@ -1280,10 +1275,10 @@
 
         document.getElementById('btnInstall').addEventListener('click', triggerInstallPrompt);
 
-        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.3
+        // REGISTRASI & AUTO-UPDATE SERVICE WORKER v3.5
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js?v=3.3').then(reg => {
+                navigator.serviceWorker.register('sw.js?v=3.5').then(reg => {
                     reg.update();
                 }).catch(err => console.log(err));
             });
