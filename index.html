@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Catatan Kas Kelas</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0d6efd">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { background-color: #f8f9fa; padding-top: 60px; padding-bottom: 80px; user-select: none; }
+        .navbar-top { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .bottom-nav { background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .nav-item-bottom { flex: 1; text-align: center; padding: 10px 0; color: #6c757d; cursor: pointer; text-decoration: none; font-size: 12px; }
+        .nav-item-bottom i { font-size: 20px; display: block; margin-bottom: 3px; }
+        .nav-item-bottom.active { color: #0d6efd; font-weight: bold; }
+        .page-section { display: none; animation: fadeIn 0.3s; }
+        .page-section.active { display: block; }
+        .fab { position: fixed; bottom: 85px; right: 20px; width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 1000; }
+        #installBanner { display: none; background: #fff3cd; color: #856404; padding: 10px 15px; border-bottom: 1px solid #ffeeba; align-items: center; justify-content: space-between; z-index: 1040; position: fixed; top: 56px; width: 100%; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .list-group-item { border-radius: 10px !important; margin-bottom: 10px; border: none; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-dark bg-primary fixed-top navbar-top">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1"><i class="fa-solid fa-wallet me-2"></i>Kas Kelas</span>
+        </div>
+    </nav>
+
+    <!-- PWA Install Banner -->
+    <div id="installBanner">
+        <span><i class="fa-solid fa-download me-2"></i>Instal Aplikasi ke Layar Utama</span>
+        <button id="btnInstall" class="btn btn-sm btn-primary">Instal</button>
+    </div>
+
+    <!-- MAIN CONTENT (SPA) -->
+    <div class="container mt-3">
+
+        <!-- HALAMAN BERANDA -->
+        <div id="page-beranda" class="page-section active">
+            <div class="card bg-primary text-white mb-3 shadow-sm" style="border-radius: 15px;">
+                <div class="card-body text-center">
+                    <h6 class="card-title">Total Saldo Kas</h6>
+                    <h2 id="saldoTotal" class="fw-bold mb-0">Rp 0</h2>
+                </div>
+            </div>
+            <div class="row g-2 mb-4">
+                <div class="col-6">
+                    <div class="card border-success shadow-sm">
+                        <div class="card-body p-2 text-center text-success">
+                            <small class="d-block"><i class="fa-solid fa-arrow-down me-1"></i>Pemasukan</small>
+                            <span id="totalMasuk" class="fw-bold">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card border-danger shadow-sm">
+                        <div class="card-body p-2 text-center text-danger">
+                            <small class="d-block"><i class="fa-solid fa-arrow-up me-1"></i>Pengeluaran</small>
+                            <span id="totalKeluar" class="fw-bold">Rp 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h6 class="mb-3 text-muted">Transaksi Terakhir</h6>
+            <div id="listBeranda"></div>
+            <!-- FAB Tambah Transaksi -->
+            <button class="btn btn-primary fab" onclick="openModalTransaksi()"><i class="fa-solid fa-plus fa-lg"></i></button>
+        </div>
+
+        <!-- HALAMAN DATA -->
+        <div id="page-data" class="page-section">
+            <ul class="nav nav-pills nav-fill bg-white p-1 rounded shadow-sm mb-3">
+                <li class="nav-item">
+                    <button class="nav-link active" id="tab-transaksi" onclick="switchDataTab('transaksi')">Buku Kas</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="tab-siswa" onclick="switchDataTab('siswa')">Data Siswa</button>
+                </li>
+            </ul>
+
+            <!-- Sub-tab Transaksi -->
+            <div id="sub-transaksi">
+                <div class="input-group mb-3 shadow-sm">
+                    <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+                    <input type="text" id="searchTransaksi" class="form-control border-start-0" placeholder="Cari keterangan / nama siswa..." onkeyup="renderBukuKas()">
+                </div>
+                <div id="listBukuKas"></div>
+            </div>
+
+            <!-- Sub-tab Siswa -->
+            <div id="sub-siswa" style="display: none;">
+                <button class="btn btn-primary w-100 mb-3 shadow-sm" onclick="openModalSiswa()"><i class="fa-solid fa-user-plus me-2"></i>Tambah Siswa</button>
+                <div id="listSiswa" class="list-group"></div>
+            </div>
+        </div>
+
+        <!-- HALAMAN PENGATURAN -->
+        <div id="page-pengaturan" class="page-section">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-body">
+                    <h6 class="card-title text-primary"><i class="fa-solid fa-database me-2"></i>Backup & Restore</h6>
+                    <p class="text-muted small">Simpan data ke HP atau pulihkan data dari file backup (.json).</p>
+                    <button class="btn btn-success w-100 mb-2" onclick="exportData()"><i class="fa-solid fa-file-export me-2"></i>Backup Data (Export)</button>
+                    <label class="btn btn-warning w-100 mb-0">
+                        <i class="fa-solid fa-file-import me-2"></i>Restore Data (Import)
+                        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+                    </label>
+                </div>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="card-title text-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>Zona Bahaya</h6>
+                    <p class="text-muted small">Hapus seluruh data kas dan siswa dari perangkat ini.</p>
+                    <button class="btn btn-outline-danger w-100" onclick="confirmResetData()"><i class="fa-solid fa-trash me-2"></i>Reset Semua Data</button>
+                </div>
+            </div>
+            <p class="text-center text-muted small mt-4">Catatan Kas Kelas v1.0<br>Mode Offline-First aktif</p>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed-bottom bottom-nav d-flex">
+        <a class="nav-item-bottom active" onclick="switchPage('beranda', this)">
+            <i class="fa-solid fa-house"></i> Beranda
+        </a>
+        <a class="nav-item-bottom" onclick="switchPage('data', this)">
+            <i class="fa-solid fa-list-check"></i> Data
+        </a>
+        <a class="nav-item-bottom" onclick="switchPage('pengaturan', this)">
+            <i class="fa-solid fa-gear"></i> Pengaturan
+        </a>
+    </nav>
+
+    <!-- MODAL CUSTOM: Notifikasi (Pengganti Alert) -->
+    <div class="modal fade" id="modalNotif" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-4">
+                    <i class="fa-solid fa-bell text-primary mb-3" style="font-size: 40px;"></i>
+                    <h6 id="notifTitle" class="fw-bold">Pesan</h6>
+                    <p id="notifMessage" class="text-muted small mb-3">Isi pesan disini.</p>
+                    <button type="button" class="btn btn-primary btn-sm w-100" data-bs-dismiss="modal">Mengerti</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOM: Konfirmasi (Pengganti Confirm) -->
+    <div class="modal fade" id="modalConfirm" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered w-75 mx-auto">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-4">
+                    <i class="fa-solid fa-circle-question text-warning mb-3" style="font-size: 40px;"></i>
+                    <h6 id="confirmTitle" class="fw-bold">Konfirmasi</h6>
+                    <p id="confirmMessage" class="text-muted small mb-3">Apakah Anda yakin?</p>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-light btn-sm w-50" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger btn-sm w-50" id="btnConfirmAction">Yakin</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Tambah Siswa -->
+    <div class="modal fade" id="modalAddSiswa" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 bg-primary text-white">
+                    <h6 class="modal-title">Tambah Siswa</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small">Nama Lengkap Siswa</label>
+                        <input type="text" class="form-control" id="inputNamaSiswa" placeholder="Masukkan nama...">
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="saveSiswa()">Simpan Siswa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Tambah Transaksi -->
+    <div class="modal fade" id="modalAddTransaksi" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 bg-primary text-white">
+                    <h6 class="modal-title">Catat Transaksi</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2">
+                        <label class="form-label small">Jenis Transaksi</label>
+                        <select class="form-select" id="inputJenis">
+                            <option value="masuk">Uang Masuk (Bayar Kas)</option>
+                            <option value="keluar">Uang Keluar (Pengeluaran)</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Nama Siswa (Opsional)</label>
+                        <select class="form-select" id="inputSiswaTransaksi">
+                            <option value="">-- Pilih Siswa --</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Tanggal</label>
+                        <input type="date" class="form-control" id="inputTanggal">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label small">Nominal (Rp)</label>
+                        <input type="number" class="form-control" id="inputNominal" placeholder="Contoh: 5000">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small">Keterangan</label>
+                        <textarea class="form-control" id="inputKeterangan" rows="2" placeholder="Contoh: Uang kas minggu ke-1"></textarea>
+                    </div>
+                    <button class="btn btn-primary w-100" onclick="saveTransaksi()">Simpan Transaksi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- INISIALISASI VARIABEL & UI ---
+        let kasData = {
+            transactions: JSON.parse(localStorage.getItem('kas_transactions')) || [],
+            students: JSON.parse(localStorage.getItem('kas_students')) || []
+        };
+        let confirmCallback = null;
+
+        const modalNotif = new bootstrap.Modal(document.getElementById('modalNotif'));
+        const modalConfirm = new bootstrap.Modal(document.getElementById('modalConfirm'));
+        const modalAddSiswa = new bootstrap.Modal(document.getElementById('modalAddSiswa'));
+        const modalAddTransaksi = new bootstrap.Modal(document.getElementById('modalAddTransaksi'));
+
+        // --- SISTEM NOTIFIKASI CUSTOM (Anti Alert/Confirm) ---
+        function showNotif(title, message) {
+            document.getElementById('notifTitle').innerText = title;
+            document.getElementById('notifMessage').innerText = message;
+            modalNotif.show();
+        }
+
+        function showConfirm(title, message, callback) {
+            document.getElementById('confirmTitle').innerText = title;
+            document.getElementById('confirmMessage').innerText = message;
+            confirmCallback = callback;
+            modalConfirm.show();
+        }
+
+        document.getElementById('btnConfirmAction').addEventListener('click', () => {
+            if(confirmCallback) confirmCallback();
+            modalConfirm.hide();
+        });
+
+        // --- FORMATTER ---
+        const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        const formatDate = (dateStr) => {
+            const date = new Date(dateStr);
+            return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth()+1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        };
+
+        // --- NAVIGASI SPA ---
+        function switchPage(pageId, element) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('page-' + pageId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item-bottom').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            
+            if(pageId === 'beranda') renderBeranda();
+            if(pageId === 'data') { renderBukuKas(); renderSiswa(); }
+        }
+
+        function switchDataTab(tab) {
+            document.getElementById('sub-transaksi').style.display = tab === 'transaksi' ? 'block' : 'none';
+            document.getElementById('sub-siswa').style.display = tab === 'siswa' ? 'block' : 'none';
+            document.getElementById('tab-transaksi').classList.toggle('active', tab === 'transaksi');
+            document.getElementById('tab-siswa').classList.toggle('active', tab === 'siswa');
+        }
+
+        // --- LOGIKA DATA ---
+        function saveToLocal() {
+            localStorage.setItem('kas_transactions', JSON.stringify(kasData.transactions));
+            localStorage.setItem('kas_students', JSON.stringify(kasData.students));
+            renderBeranda(); renderBukuKas(); renderSiswa(); populateSiswaSelect();
+        }
+
+        // SISWA
+        function openModalSiswa() {
+            document.getElementById('inputNamaSiswa').value = '';
+            modalAddSiswa.show();
+        }
+
+        function saveSiswa() {
+            const nama = document.getElementById('inputNamaSiswa').value.trim();
+            if (!nama) return showNotif("Error", "Nama siswa tidak boleh kosong!");
+            
+            kasData.students.push({ id: Date.now().toString(), name: nama });
+            saveToLocal();
+            modalAddSiswa.hide();
+            showNotif("Sukses", "Data siswa berhasil ditambahkan.");
+        }
+
+        function hapusSiswa(id) {
+            showConfirm("Hapus Siswa", "Yakin ingin menghapus siswa ini?", () => {
+                kasData.students = kasData.students.filter(s => s.id !== id);
+                saveToLocal();
+            });
+        }
+
+        function renderSiswa() {
+            const list = document.getElementById('listSiswa');
+            list.innerHTML = '';
+            if (kasData.students.length === 0) {
+                list.innerHTML = `<div class="text-center text-muted small py-4">Belum ada data siswa.</div>`;
+                return;
+            }
+            kasData.students.forEach(s => {
+                list.innerHTML += `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-dark"><i class="fa-solid fa-user text-secondary me-2"></i>${s.name}</span>
+                        <button class="btn btn-sm text-danger" onclick="hapusSiswa('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+        }
+
+        function populateSiswaSelect() {
+            const select = document.getElementById('inputSiswaTransaksi');
+            select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+            kasData.students.forEach(s => {
+                select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+            });
+        }
+
+        // TRANSAKSI
+        function openModalTransaksi() {
+            document.getElementById('inputTanggal').valueAsDate = new Date();
+            document.getElementById('inputNominal').value = '';
+            document.getElementById('inputKeterangan').value = '';
+            document.getElementById('inputSiswaTransaksi').value = '';
+            modalAddTransaksi.show();
+        }
+
+        function saveTransaksi() {
+            const jenis = document.getElementById('inputJenis').value;
+            const tanggal = document.getElementById('inputTanggal').value;
+            const nominal = parseInt(document.getElementById('inputNominal').value);
+            const keterangan = document.getElementById('inputKeterangan').value.trim();
+            const siswa = document.getElementById('inputSiswaTransaksi').value;
+
+            if (!tanggal || !nominal || !keterangan) return showNotif("Error", "Tanggal, nominal, dan keterangan wajib diisi!");
+            
+            kasData.transactions.push({
+                id: Date.now().toString(), type: jenis, date: tanggal,
+                amount: nominal, desc: keterangan, student: siswa
+            });
+            
+            kasData.transactions.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort terbaru
+            saveToLocal();
+            modalAddTransaksi.hide();
+            showNotif("Sukses", "Transaksi berhasil dicatat.");
+        }
+
+        function hapusTransaksi(id) {
+            showConfirm("Hapus Transaksi", "Yakin ingin menghapus data kas ini?", () => {
+                kasData.transactions = kasData.transactions.filter(t => t.id !== id);
+                saveToLocal();
+            });
+        }
+
+        function renderTemplateTransaksi(t) {
+            const isMasuk = t.type === 'masuk';
+            const icon = isMasuk ? '<i class="fa-solid fa-arrow-down text-success"></i>' : '<i class="fa-solid fa-arrow-up text-danger"></i>';
+            const color = isMasuk ? 'text-success' : 'text-danger';
+            const sign = isMasuk ? '+' : '-';
+            const namaSiswa = t.student ? `<small class="d-block text-primary"><i class="fa-solid fa-user me-1"></i>${t.student}</small>` : '';
+
+            return `
+                <div class="list-group-item bg-white">
+                    <div class="d-flex justify-content-between align-items-start mb-1">
+                        <div>
+                            <small class="text-muted"><i class="fa-regular fa-calendar me-1"></i>${formatDate(t.date)}</small>
+                            <h6 class="mb-0 fw-bold mt-1">${t.desc}</h6>
+                            ${namaSiswa}
+                        </div>
+                        <div class="text-end">
+                            <span class="${color} fw-bold d-block">${icon} ${sign} ${formatRp(t.amount)}</span>
+                            <button class="btn btn-sm text-danger p-0 mt-2" onclick="hapusTransaksi('${t.id}')"><i class="fa-solid fa-trash"></i> Hapus</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderBeranda() {
+            let masuk = 0, keluar = 0;
+            kasData.transactions.forEach(t => {
+                if (t.type === 'masuk') masuk += t.amount;
+                else keluar += t.amount;
+            });
+            document.getElementById('saldoTotal').innerText = formatRp(masuk - keluar);
+            document.getElementById('totalMasuk').innerText = formatRp(masuk);
+            document.getElementById('totalKeluar').innerText = formatRp(keluar);
+
+            const list = document.getElementById('listBeranda');
+            const recent = kasData.transactions.slice(0, 5); // Ambil 5 terbaru
+            if(recent.length === 0) {
+                list.innerHTML = `<div class="text-center text-muted small">Belum ada transaksi.</div>`;
+            } else {
+                list.innerHTML = '<div class="list-group">' + recent.map(renderTemplateTransaksi).join('') + '</div>';
+            }
+        }
+
+        function renderBukuKas() {
+            const list = document.getElementById('listBukuKas');
+            const keyword = document.getElementById('searchTransaksi').value.toLowerCase();
+            
+            const filtered = kasData.transactions.filter(t => 
+                t.desc.toLowerCase().includes(keyword) || 
+                (t.student && t.student.toLowerCase().includes(keyword))
+            );
+
+            if(filtered.length === 0) {
+                list.innerHTML = `<div class="text-center text-muted small py-4">Data tidak ditemukan.</div>`;
+            } else {
+                list.innerHTML = '<div class="list-group">' + filtered.map(renderTemplateTransaksi).join('') + '</div>';
+            }
+        }
+
+        // --- BACKUP & RESTORE (PENGATURAN) ---
+        function exportData() {
+            if(kasData.transactions.length === 0 && kasData.students.length === 0) {
+                return showNotif("Peringatan", "Tidak ada data untuk dibackup.");
+            }
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kasData));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "backup_kas_kelas.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showNotif("Sukses", "File backup berhasil diunduh.");
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(imported.transactions && imported.students) {
+                        showConfirm("Restore Data", "Data saat ini akan tertimpa. Lanjutkan?", () => {
+                            kasData = imported;
+                            saveToLocal();
+                            document.getElementById('importFile').value = ''; // reset input
+                            showNotif("Sukses", "Data berhasil dipulihkan.");
+                        });
+                    } else {
+                        showNotif("Error", "Format file tidak valid.");
+                    }
+                } catch (error) {
+                    showNotif("Error", "Gagal membaca file JSON.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function confirmResetData() {
+            showConfirm("Peringatan Keras!", "Seluruh data transaksi dan siswa akan terhapus permanen dari HP ini. Anda yakin?", () => {
+                kasData = { transactions: [], students: [] };
+                saveToLocal();
+                showNotif("Reset Selesai", "Semua data telah dikosongkan.");
+            });
+        }
+
+        // --- PWA INSTALLATION LOGIC ---
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Tampilkan banner
+            document.getElementById('installBanner').style.display = 'flex';
+        });
+
+        document.getElementById('btnInstall').addEventListener('click', async () => {
+            document.getElementById('installBanner').style.display = 'none';
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            }
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW Registered', reg))
+                .catch(err => console.log('SW Reg Failed', err));
+            });
+        }
+
+        // Init Load
+        renderBeranda();
+        populateSiswaSelect();
+    </script>
+</body>
+</html>
