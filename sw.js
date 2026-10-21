@@ -1,10 +1,10 @@
-// Nama cache diperbarui ke v1.1
-const CACHE_NAME = 'kas-kelas-pwa-v1.1';
+// Nama cache diperbarui ke v1.2
+const CACHE_NAME = 'kas-kelas-pwa-v1.2';
 const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './Logokaskelas.jpg', // Logo dimasukkan ke cache agar bisa diakses offline
+  './Logokaskelas.jpg',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
@@ -26,7 +26,6 @@ self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
       .then(response => {
-        // Return file dari cache jika ada, jika tidak fetch dari network
         return response || fetch(event.request);
       })
   );
